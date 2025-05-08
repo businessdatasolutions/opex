@@ -2,10 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>PrecisionTech Manufacturing Case Study</title>
     <style>
       :root {
@@ -199,9 +196,11 @@
       }
 
       .case-img {
-        width: 100%;
+        width: 60%;
         border-radius: 8px;
-        margin: 1.5rem 0;
+        padding: 1.5rem 0;
+        margin: auto;
+        display: block;
       }
 
       .case-quote {
@@ -532,54 +531,33 @@
     <header>
       <div class="container">
         <nav class="navbar">
-          <a
-            href="index.html"
-            class="logo"
-          >
+          <a href="index.html" class="logo">
             <div class="logo-icon">OE</div>
             <span>Operational Excellence</span>
           </a>
           <button class="mobile-menu-btn">≡</button>
           <ul class="nav-links">
             <li>
-              <a
-                href="index.html"
-                class="nav-link"
-                >Home</a
-              >
+              <a href="index.html" class="nav-link">Home</a>
             </li>
             <li>
-              <a
-                href="manufacturing-case.html"
-                class="nav-link active"
+              <a href="manufacturing-case.html" class="nav-link active"
                 >Manufacturing</a
               >
             </li>
             <li>
-              <a
-                href="finance-case.html"
-                class="nav-link"
-                >Finance</a
-              >
+              <a href="finance-case.html" class="nav-link">Finance</a>
             </li>
             <li>
-              <a
-                href="government-case.html"
-                class="nav-link"
-                >Government</a
-              >
+              <a href="government-case.html" class="nav-link">Government</a>
             </li>
             <li>
-              <a
-                href="gaussian-processes.html"
-                class="nav-link"
+              <a href="gaussian-processes.html" class="nav-link"
                 >Gaussian Processes</a
               >
             </li>
             <li>
-              <a
-                href="instructor-resources.html"
-                class="nav-link"
+              <a href="instructor-resources.html" class="nav-link"
                 >Instructor Resources</a
               >
             </li>
@@ -622,36 +600,15 @@
 
         <div class="tab-container">
           <div class="tabs">
-            <div
-              class="tab active"
-              data-tab="case-narrative"
-            >
-              Case Narrative
-            </div>
-            <div
-              class="tab"
-              data-tab="interactive-tool"
-            >
-              Interactive Tool
-            </div>
-            <div
-              class="tab"
-              data-tab="discussion-questions"
-            >
+            <div class="tab active" data-tab="case-narrative">Case Story</div>
+            <div class="tab" data-tab="interactive-tool">Interactive Tool</div>
+            <div class="tab" data-tab="discussion-questions">
               Discussion Questions
             </div>
-            <div
-              class="tab"
-              data-tab="resources"
-            >
-              Additional Resources
-            </div>
+            <div class="tab" data-tab="resources">Additional Resources</div>
           </div>
 
-          <div
-            class="tab-content active"
-            data-tab-content="case-narrative"
-          >
+          <div class="tab-content active" data-tab-content="case-narrative">
             <div class="case-content">
               <div class="case-section">
                 <h2 class="case-section-title">Background</h2>
@@ -968,10 +925,7 @@
             </div>
           </div>
 
-          <div
-            class="tab-content"
-            data-tab-content="interactive-tool"
-          >
+          <div class="tab-content" data-tab-content="interactive-tool">
             <h3 style="margin-bottom: 1rem">
               PrecisionTech Process Optimization Tool
             </h3>
@@ -986,16 +940,8 @@
               <div class="tool-header">
                 <div class="tool-title">Bayesian Optimization Model</div>
                 <div class="tool-actions">
-                  <button
-                    class="action-btn"
-                    id="reset-btn"
-                  >
-                    Reset
-                  </button>
-                  <button
-                    class="action-btn"
-                    id="optimal-btn"
-                  >
+                  <button class="action-btn" id="reset-btn">Reset</button>
+                  <button class="action-btn" id="optimal-btn">
                     Find Optimal
                   </button>
                 </div>
@@ -1026,10 +972,7 @@
             </p>
           </div>
 
-          <div
-            class="tab-content"
-            data-tab-content="discussion-questions"
-          >
+          <div class="tab-content" data-tab-content="discussion-questions">
             <h3>Discussion Questions</h3>
 
             <div class="case-questions">
@@ -1098,10 +1041,7 @@
             </p>
           </div>
 
-          <div
-            class="tab-content"
-            data-tab-content="resources"
-          >
+          <div class="tab-content" data-tab-content="resources">
             <h3>Additional Resources</h3>
 
             <h4 style="margin-top: 1.5rem">Readings</h4>

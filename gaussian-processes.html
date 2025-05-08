@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Understanding Gaussian Processes and Bayesian Optimization</title>
+    <style>
+      :root {
+        --primary: #2563eb;
+        --primary-dark: #1e40af;
+        --secondary: #0ea5e9;
+        --accent: #8b5cf6;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --dark: #1e293b;
+        --light: #f8fafc;
+        --text: #334155;
+        --text-light: #64748b;
+        --border: #e2e8f0;
+        --shadow: rgba(0, 0, 0, 0.05);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--text);
+        background-color: var(--light);
+        line-height: 1.6;
+      }
+
+      a {
+        color: var(--primary);
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      a:hover {
+        color: var(--primary-dark);
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      header {
+        background-color: white;
+        box-shadow: 0 2px 10px var(--shadow);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 0;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .logo-icon {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        background-color: var(--primary);
+        color: white;
+        font-weight: bold;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+      }
+
+      .nav-link {
+        font-weight: 500;
+        transition: all 0.3s ease;
+        position: relative;
+        padding: 0.5rem 0;
+      }
+
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: var(--primary);
+        transition: width 0.3s ease;
+      }
+
+      .nav-link:hover::after,
+      .nav-link.active::after {
+        width: 100%;
+      }
+
+      .nav-link.active {
+        color: var(--primary-dark);
+        font-weight: 600;
+      }
+
+      .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--dark);
+      }
+
+      main {
+        min-height: calc(100vh - 136px);
+        padding: 2rem 0;
+      }
+
+      .theory-header {
+        background: linear-gradient(135deg, var(--accent), #a78bfa);
+        padding: 3rem 0;
+        margin-bottom: 2rem;
+        color: white;
+        border-radius: 16px;
+      }
+
+      .theory-header-content {
+        padding: 0 2rem;
+      }
+
+      .theory-title {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .theory-subtitle {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        max-width: 800px;
+      }
+
+      .theory-meta {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+      }
+
+      .theory-meta-item {
+        background-color: rgba(255, 255, 255, 0.2);
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .theory-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px var(--shadow);
+        margin-bottom: 2rem;
+      }
+
+      .theory-section {
+        margin-bottom: 2rem;
+      }
+
+      .theory-section-title {
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+        color: var(--dark);
+        border-bottom: 2px solid var(--border);
+        padding-bottom: 0.5rem;
+      }
+
+      .theory-img {
+        width: 100%;
+        border-radius: 8px;
+        margin: 1.5rem 0;
+      }
+
+      .theory-formula {
+        background-color: #f1f5f9;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        border-radius: 8px;
+        font-family: "Cambria Math", Georgia, serif;
+        font-size: 1.1rem;
+        overflow-x: auto;
+      }
+
+      .theory-note {
+        background-color: #f0f9ff;
+        border-left: 4px solid var(--secondary);
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        border-radius: 0 8px 8px 0;
+      }
+
+      .theory-note h4 {
+        color: var(--secondary);
+        margin-bottom: 0.75rem;
+      }
+
+      .tool-container {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1rem;
+        margin: 2rem 0;
+        background-color: #f8fafc;
+      }
+
+      .tool-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .tool-title {
+        font-size: 1.3rem;
+        color: var(--dark);
+      }
+
+      .tool-actions {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .action-btn {
+        background-color: var(--accent);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .action-btn:hover {
+        background-color: #7c3aed;
+      }
+
+      .tab-container {
+        margin-bottom: 20px;
+      }
+
+      .tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid var(--border);
+        overflow-x: auto;
+        padding-bottom: 5px;
+      }
+
+      .tab {
+        padding: 10px 15px;
+        border-radius: 8px 8px 0 0;
+        background-color: #e2e8f0;
+        cursor: pointer;
+        border: 1px solid #cbd5e1;
+        border-bottom: none;
+        white-space: nowrap;
+      }
+
+      .tab.active {
+        background-color: var(--accent);
+        color: white;
+        font-weight: bold;
+      }
+
+      .tab-content {
+        display: none;
+        padding: 20px;
+        background-color: #f8fafc;
+        border-radius: 0 0 8px 8px;
+        border: 1px solid var(--border);
+        border-top: none;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      .tool-frame {
+        width: 100%;
+        height: 800px;
+        border: none;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .concept-cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        margin: 2rem 0;
+      }
+
+      .concept-card {
+        flex: 1;
+        min-width: 280px;
+        background-color: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 4px var(--shadow);
+        border-top: 3px solid var(--accent);
+      }
+
+      .concept-card-title {
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-bottom: 0.75rem;
+        color: var(--accent);
+      }
+
+      .code-block {
+        background-color: #1e293b;
+        color: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin: 1.5rem 0;
+        font-family: "Courier New", monospace;
+        overflow-x: auto;
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+
+      .code-comment {
+        color: #94a3b8;
+      }
+
+      .further-reading {
+        background-color: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        box-shadow: 0 2px 4px var(--shadow);
+      }
+
+      .reading-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1rem;
+        margin-top: 1rem;
+      }
+
+      .reading-item {
+        display: flex;
+        flex-direction: column;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .reading-img {
+        height: 150px;
+        object-fit: cover;
+      }
+
+      .reading-content {
+        padding: 1rem;
+      }
+
+      .reading-title {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--dark);
+      }
+
+      .reading-author {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        margin-bottom: 0.5rem;
+      }
+
+      .reading-description {
+        font-size: 0.9rem;
+        color: var(--text);
+      }
+
+      .glossary-list {
+        background-color: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        box-shadow: 0 2px 4px var(--shadow);
+      }
+
+      .glossary-term {
+        margin-bottom: 1.5rem;
+      }
+
+      .glossary-term:last-child {
+        margin-bottom: 0;
+      }
+
+      .glossary-term dt {
+        font-weight: 600;
+        color: var(--accent);
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+      }
+
+      .glossary-term dd {
+        padding-left: 1rem;
+        border-left: 3px solid var(--border);
+      }
+
+      footer {
+        background-color: var(--dark);
+        color: white;
+        padding: 2rem 0;
+        margin-top: 3rem;
+      }
+
+      .footer-content {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 2rem;
+      }
+
+      .footer-col {
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .footer-col h3 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        position: relative;
+        padding-bottom: 0.5rem;
+      }
+
+      .footer-col h3::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 40px;
+        height: 2px;
+        background-color: var(--accent);
+      }
+
+      .footer-links {
+        list-style: none;
+      }
+
+      .footer-link {
+        margin-bottom: 0.5rem;
+      }
+
+      .footer-link a {
+        color: rgba(255, 255, 255, 0.7);
+        transition: color 0.3s ease;
+      }
+
+      .footer-link a:hover {
+        color: white;
+      }
+
+      .copyright {
+        text-align: center;
+        padding-top: 2rem;
+        margin-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      @media (max-width: 768px) {
+        .navbar {
+          flex-direction: column;
+          padding: 1rem;
+        }
+
+        .nav-links {
+          margin-top: 1rem;
+          flex-direction: column;
+          gap: 1rem;
+          width: 100%;
+        }
+
+        .mobile-menu-btn {
+          display: block;
+          position: absolute;
+          top: 1rem;
+          right: 1rem;
+        }
+
+        .nav-links {
+          display: none;
+        }
+
+        .nav-links.show {
+          display: flex;
+        }
+
+        .theory-title {
+          font-size: 2rem;
+        }
+
+        .theory-content {
+          padding: 1.5rem;
+        }
+
+        .theory-header {
+          padding: 2rem 0;
+        }
+
+        .theory-header-content {
+          padding: 0 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <nav class="navbar">
+          <a
+            href="index.html"
+            class="logo"
+          >
+            <div class="logo-icon">OE</div>
+            <span>Operational Excellence</span>
+          </a>
+          <button class="mobile-menu-btn">≡</button>
+          <ul class="nav-links">
+            <li>
+              <a
+                href="index.html"
+                class="nav-link"
+                >Home</a
+              >
+            </li>
+            <li>
+              <a
+                href="manufacturing-case.html"
+                class="nav-link"
+                >Manufacturing</a
+              >
+            </li>
+            <li>
+              <a
+                href="finance-case.html"
+                class="nav-link"
+                >Finance</a
+              >
+            </li>
+            <li>
+              <a
+                href="government-case.html"
+                class="nav-link"
+                >Government</a
+              >
+            </li>
+            <li>
+              <a
+                href="gaussian-processes.html"
+                class="nav-link active"
+                >Gaussian Processes</a
+              >
+            </li>
+            <li>
+              <a
+                href="instructor-resources.html"
+                class="nav-link"
+                >Instructor Resources</a
+              >
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="container">
+        <div class="theory-header">
+          <div class="theory-header-content">
+            <h1 class="theory-title">
+              Understanding Gaussian Processes and Bayesian Optimization
+            </h1>
+            <p class="theory-subtitle">
+              A comprehensive guide to modeling uncertainty in complex systems
+            </p>
+            <div class="theory-meta">
+              <span class="theory-meta-item">📊 Statistical Methods</span>
+              <span class="theory-meta-item">🧮 Probability Theory</span>
+              <span class="theory-meta-item">⚙️ Optimization</span>
+              <span class="theory-meta-item"
+                >🔍 Uncertainty Quantification</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-container">
+          <div class="tabs">
+            <div
+              class="tab active"
+              data-tab="theory"
+            >
+              Theoretical Foundations
+            </div>
+            <div
+              class="tab"
+              data-tab="visualization"
+            >
+              Interactive Visualization
+            </div>
+            <div
+              class="tab"
+              data-tab="implementation"
+            >
+              Implementation Guide
+            </div>
+            <div
+              class="tab"
+              data-tab="resources"
+            >
+              Resources & Glossary
+            </div>
+          </div>
+
+          <div
+            class="tab-content active"
+            data-tab-content="theory"
+          >
+            <div class="theory-content">
+              <div class="theory-section">
+                <h2 class="theory-section-title">
+                  Introduction to Gaussian Processes
+                </h2>
+                <p>
+                  Gaussian Processes (GPs) represent one of the most powerful
+                  frameworks in statistical modeling, providing a principled way
+                  to model uncertainty in complex systems. At their core,
+                  Gaussian Processes are probability distributions over
+                  functions, rather than over individual values. This makes them
+                  exceptionally well-suited for modeling real-world phenomena
+                  with inherent randomness.
+                </p>
+
+                <div class="concept-cards">
+                  <div class="concept-card">
+                    <h3 class="concept-card-title">
+                      Distribution Over Functions
+                    </h3>
+                    <p>
+                      Unlike traditional modeling approaches that predict a
+                      single value for each input, a Gaussian Process defines a
+                      probability distribution over possible functions.
+                    </p>
+                  </div>
+
+                  <div class="concept-card">
+                    <h3 class="concept-card-title">
+                      Mean and Covariance Functions
+                    </h3>
+                    <p>
+                      A Gaussian Process is fully specified by its mean function
+                      μ(x) and covariance function k(x,x'). These determine the
+                      expected value at any point and how points correlate with
+                      each other.
+                    </p>
+                  </div>
+
+                  <div class="concept-card">
+                    <h3 class="concept-card-title">
+                      Non-parametric Flexibility
+                    </h3>
+                    <p>
+                      GPs can represent a wide variety of function shapes
+                      without requiring the modeler to specify the exact form in
+                      advance.
+                    </p>
+                  </div>
+                </div>
+
+                <p>
+                  The power of Gaussian Processes lies in their ability to
+                  express uncertainty. Rather than making a single prediction,
+                  they provide a distribution over possible values, capturing
+                  the range of potential outcomes and their probabilities.
+                </p>
+              </div>
+
+              <div class="theory-section">
+                <h2 class="theory-section-title">
+                  The Mathematical Foundation
+                </h2>
+                <p>
+                  Formally, a Gaussian Process is defined as a collection of
+                  random variables, any finite number of which have a joint
+                  Gaussian distribution. We write:
+                </p>
+
+                <div class="theory-formula">f(x) ~ GP(μ(x), k(x,x'))</div>
+
+                <p>Where:</p>
+                <ul>
+                  <li>f(x) is the unknown function we are modeling</li>
+                  <li>μ(x) is the mean function (often assumed to be zero)</li>
+                  <li>k(x,x') is the covariance function or kernel</li>
+                </ul>
+
+                <p>
+                  For any set of points X = {x₁, x₂, ..., xₙ}, the corresponding
+                  function values f(X) follow a multivariate normal
+                  distribution:
+                </p>
+
+                <div class="theory-formula">f(X) ~ N(μ(X), K(X,X))</div>
+
+                <p>Where:</p>
+                <ul>
+                  <li>μ(X) is the vector [μ(x₁), μ(x₂), ..., μ(xₙ)]</li>
+                  <li>
+                    K(X,X) is the n×n covariance matrix where K(i,j) = k(xᵢ,xⱼ)
+                  </li>
+                </ul>
+
+                <div class="theory-note">
+                  <h4>Key Insight</h4>
+                  <p>
+                    The covariance function k(x,x') determines how points in the
+                    input space are related. Points that are close together in
+                    the input space will have similar function values, while
+                    points far apart may be relatively uncorrelated. This
+                    encodes our prior beliefs about the function's smoothness
+                    and variability.
+                  </p>
+                </div>
+              </div>
+
+              <div class="theory-section">
+                <h2 class="theory-section-title">
+                  Input-Dependent Mean and Variance
+                </h2>
+                <p>
+                  In standard Gaussian Process models, the mean function might
+                  be constant or a simple function of the inputs, while the
+                  covariance function defines how uncertainty propagates through
+                  the input space. However, in more complex scenarios – like the
+                  ones presented in our case studies – both the mean and
+                  variance can be complex functions of the inputs.
+                </p>
+
+                <p>In our model, we have:</p>
+
+                <div class="theory-formula">
+                  f(x) ~ N(μ(x₁, x₂), σ²(x₁, x₂))
+                </div>
+
+                <p>Where:</p>
+                <ul>
+                  <li>μ(x₁, x₂) = x₁² - 2x₁x₂ + cos(x₂)</li>
+                  <li>σ²(x₁, x₂) = cos(x₁² + x₂²)</li>
+                </ul>
+
+                <p>This formulation allows us to capture scenarios where:</p>
+                <ol>
+                  <li>
+                    The expected outcome changes based on input parameters
+                    (through the mean function)
+                  </li>
+                  <li>
+                    The uncertainty or variability of outcomes also changes
+                    based on those same parameters (through the variance
+                    function)
+                  </li>
+                </ol>
+
+                <img
+                  src="/api/placeholder/800/400"
+                  alt="Visualization of input-dependent mean and variance"
+                  class="theory-img"
+                />
+              </div>
+
+              <div class="theory-section">
+                <h2 class="theory-section-title">Bayesian Optimization</h2>
+                <p>
+                  Bayesian optimization builds on Gaussian Processes to provide
+                  a powerful framework for optimizing black-box functions –
+                  functions that are expensive to evaluate, may not have a
+                  closed form, or don't have easily accessible derivatives.
+                </p>
+
+                <h3
+                  style="
+                    margin-top: 1.5rem;
+                    font-size: 1.4rem;
+                    color: var(--dark);
+                  "
+                >
+                  The Optimization Process
+                </h3>
+
+                <ol>
+                  <li>
+                    <strong>Build a Surrogate Model</strong>: Construct a
+                    Gaussian Process model of the objective function based on
+                    observed data.
+                  </li>
+                  <li>
+                    <strong>Define an Acquisition Function</strong>: Create a
+                    function that decides which point to sample next, balancing
+                    exploration (reducing uncertainty) and exploitation (finding
+                    better values).
+                  </li>
+                  <li>
+                    <strong>Optimize the Acquisition Function</strong>: Find the
+                    input values that maximize the acquisition function.
+                  </li>
+                  <li>
+                    <strong>Sample the Objective Function</strong>: Evaluate the
+                    true objective function at the proposed point.
+                  </li>
+                  <li>
+                    <strong>Update the Model</strong>: Incorporate the new data
+                    point and repeat the process.
+                  </li>
+                </ol>
+
+                <p>This approach is particularly valuable when:</p>
+                <ul>
+                  <li>
+                    Each evaluation of the objective function is expensive
+                    (time-consuming, resource-intensive, etc.)
+                  </li>
+                  <li>The function has multiple local optima</li>
+                  <li>We have no access to derivatives</li>
+                  <li>The function contains noise or randomness</li>
+                </ul>
+              </div>
+
+              <div class="theory-section">
+                <h2 class="theory-section-title">
+                  Common Kernels (Covariance Functions)
+                </h2>
+                <p>
+                  The choice of kernel dramatically affects the behavior of a
+                  Gaussian Process model:
+                </p>
+
+                <h3
+                  style="
+                    margin-top: 1.5rem;
+                    font-size: 1.3rem;
+                    color: var(--dark);
+                  "
+                >
+                  Radial Basis Function (RBF)/Squared Exponential
+                </h3>
+                <p>Produces very smooth functions</p>
+                <div class="theory-formula">k(x,x') = σ² exp(-‖x-x'‖²/2l²)</div>
+
+                <h3
+                  style="
+                    margin-top: 1.5rem;
+                    font-size: 1.3rem;
+                    color: var(--dark);
+                  "
+                >
+                  Matérn Kernel
+                </h3>
+                <p>Controls the smoothness of functions</p>
+                <p>Allows for modeling various degrees of smoothness</p>
+
+                <h3
+                  style="
+                    margin-top: 1.5rem;
+                    font-size: 1.3rem;
+                    color: var(--dark);
+                  "
+                >
+                  Periodic Kernel
+                </h3>
+                <p>Models periodic patterns</p>
+                <div class="theory-formula">
+                  k(x,x') = σ² exp(-2sin²(π|x-x'|/p)/l²)
+                </div>
+
+                <h3
+                  style="
+                    margin-top: 1.5rem;
+                    font-size: 1.3rem;
+                    color: var(--dark);
+                  "
+                >
+                  Linear Kernel
+                </h3>
+                <p>Models linear relationships</p>
+                <div class="theory-formula">k(x,x') = σ² x·x'</div>
+
+                <h3
+                  style="
+                    margin-top: 1.5rem;
+                    font-size: 1.3rem;
+                    color: var(--dark);
+                  "
+                >
+                  Custom and Composite Kernels
+                </h3>
+                <p>
+                  Combinations of basic kernels can capture complex patterns
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="tab-content"
+            data-tab-content="visualization"
+          >
+            <h3 style="margin-bottom: 1rem">
+              Interactive Gaussian Process Visualization
+            </h3>
+            <p>
+              This interactive tool allows you to explore the Gaussian Process
+              model used in our case studies. You can visualize how both the
+              mean and variance change as functions of the input parameters, and
+              see random realizations from the underlying probability
+              distribution.
+            </p>
+
+            <div class="tool-container">
+              <div class="tool-header">
+                <div class="tool-title">Bayesian Optimization Model</div>
+                <div class="tool-actions">
+                  <button
+                    class="action-btn"
+                    id="explore-btn"
+                  >
+                    Explore Regions
+                  </button>
+                  <button
+                    class="action-btn"
+                    id="sample-btn"
+                  >
+                    Generate Samples
+                  </button>
+                  <button
+                    class="action-btn"
+                    id="reset-btn"
+                  >
+                    Reset
+                  </button>
+                </div>
+              </div>
+
+              <iframe
+                src="bayesian-model-visualization.html"
+                class="tool-frame"
+                id="visualization-frame"
+              ></iframe>
+            </div>
+
+            <div class="theory-note">
+              <h4>Understanding the Visualization</h4>
+              <p>
+                The interactive visualization demonstrates several key concepts:
+              </p>
+              <ol>
+                <li>
+                  <strong>Input-Dependent Mean</strong>: The left heatmap shows
+                  how the expected value changes across the input space.
+                </li>
+                <li>
+                  <strong>Input-Dependent Variance</strong>: The right heatmap
+                  shows how uncertainty changes across the same input space.
+                </li>
+                <li>
+                  <strong>Random Realizations</strong>: The colored dots
+                  represent random samples from the underlying distribution,
+                  showing what actual outcomes might look like.
+                </li>
+                <li>
+                  <strong>Probability Distribution at a Point</strong>: The
+                  bottom panel shows the normal distribution at the selected
+                  point, demonstrating how both mean and standard deviation
+                  depend on the input parameters.
+                </li>
+              </ol>
+            </div>
+
+            <h3 style="margin-top: 2rem">Exploration Tasks</h3>
+            <p>
+              Try these tasks to build your intuition about Gaussian Processes:
+            </p>
+
+            <ol>
+              <li>
+                Find regions where the variance is minimal (blue in the right
+                plot). How does this affect the random samples?
+              </li>
+              <li>
+                Find regions where the mean is high but the variance is also
+                high. What implications would this have for decision-making?
+              </li>
+              <li>
+                Generate multiple sets of samples. Notice how they all follow
+                the mean function but with different random variations.
+              </li>
+              <li>
+                Compare the probability distributions at different points in the
+                input space.
+              </li>
+            </ol>
+          </div>
+
+          <div
+            class="tab-content"
+            data-tab-content="implementation"
+          >
+            <h3>Implementing Gaussian Processes in Practice</h3>
+
+            <p>
+              Implementing Gaussian Processes and Bayesian optimization
+              typically involves several steps:
+            </p>
+
+            <div class="implementation-steps">
+              <h4 style="margin-bottom: 1.5rem">Implementation Steps</h4>
+
+              <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                  <h4 class="step-title">Data Preparation</h4>
+                  <p>
+                    Gather historical data on inputs and outcomes. Normalize the
+                    data to improve numerical stability. Handle missing values
+                    and outliers appropriately.
+                  </p>
+                </div>
+              </div>
+
+              <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                  <h4 class="step-title">Kernel Selection</h4>
+                  <p>
+                    Choose appropriate covariance functions based on domain
+                    knowledge. Consider the expected smoothness, periodicity,
+                    and complexity of the underlying function.
+                  </p>
+                </div>
+              </div>
+
+              <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                  <h4 class="step-title">Hyperparameter Optimization</h4>
+                  <p>
+                    Tune the model parameters to best fit observed data. This
+                    typically involves maximizing the log marginal likelihood of
+                    the data given the model.
+                  </p>
+                </div>
+              </div>
+
+              <div class="step">
+                <div class="step-number">4</div>
+                <div class="step-content">
+                  <h4 class="step-title">Validation</h4>
+                  <p>
+                    Test model predictions against held-out data. Ensure that
+                    the uncertainty estimates are well-calibrated through proper
+                    scoring rules and coverage analysis.
+                  </p>
+                </div>
+              </div>
+
+              <div class="step">
+                <div class="step-number">5</div>
+                <div class="step-content">
+                  <h4 class="step-title">Deployment</h4>
+                  <p>
+                    Integrate the model with existing operational systems.
+                    Create appropriate visualizations and interfaces for
+                    decision-makers.
+                  </p>
+                </div>
+              </div>
+
+              <div class="step">
+                <div class="step-number">6</div>
+                <div class="step-content">
+                  <h4 class="step-title">Continuous Learning</h4>
+                  <p>
+                    Update the model as new data becomes available. Implement
+                    online learning approaches for environments with streaming
+                    data.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <h3 style="margin-top: 2rem">Implementation Example Code</h3>
+
+            <p>
+              Here's a simple example using GPyTorch (a popular Gaussian Process
+              library for Python):
+            </p>
+
+            <div class="code-block">
+              <span class="code-comment"># Import required libraries</span>
+              import torch import gpytorch import numpy as np import
+              matplotlib.pyplot as plt
+
+              <span class="code-comment"
+                ># Define a simple Gaussian Process model</span
+              >
+              class ExactGPModel(gpytorch.models.ExactGP): def __init__(self,
+              train_x, train_y, likelihood): super(ExactGPModel,
+              self).__init__(train_x, train_y, likelihood) self.mean_module =
+              gpytorch.means.ConstantMean() self.covar_module =
+              gpytorch.kernels.ScaleKernel(gpytorch.kernels.RBFKernel()) def
+              forward(self, x): mean_x = self.mean_module(x) covar_x =
+              self.covar_module(x) return
+              gpytorch.distributions.MultivariateNormal(mean_x, covar_x)
+
+              <span class="code-comment"># Generate some toy data</span>
+              train_x = torch.linspace(0, 1, 100) train_y = torch.sin(train_x *
+              (2 * np.pi)) + torch.randn(train_x.size()) * 0.2
+
+              <span class="code-comment"
+                ># Initialize likelihood and model</span
+              >
+              likelihood = gpytorch.likelihoods.GaussianLikelihood() model =
+              ExactGPModel(train_x, train_y, likelihood)
+
+              <span class="code-comment"># Training mode</span>
+              model.train() likelihood.train()
+
+              <span class="code-comment"># Optimize the model</span>
+              optimizer = torch.optim.Adam(model.parameters(), lr=0.1) mll =
+              gpytorch.mlls.ExactMarginalLogLikelihood(likelihood, model) for i
+              in range(100): optimizer.zero_grad() output = model(train_x) loss
+              = -mll(output, train_y) loss.backward() optimizer.step()
+
+              <span class="code-comment"># Make predictions</span>
+              model.eval() likelihood.eval() test_x = torch.linspace(0, 1, 51)
+              with torch.no_grad(), gpytorch.settings.fast_pred_var():
+              observed_pred = likelihood(model(test_x))
+
+              <span class="code-comment"># Plot results</span>
+              with torch.no_grad(): f, ax = plt.subplots(1, 1, figsize=(8, 6))
+              lower, upper = observed_pred.confidence_region()
+              ax.plot(train_x.numpy(), train_y.numpy(), 'k*')
+              ax.plot(test_x.numpy(), observed_pred.mean.numpy(), 'b')
+              ax.fill_between(test_x.numpy(), lower.numpy(), upper.numpy(),
+              alpha=0.5) ax.set_ylim([-3, 3]) ax.legend(['Observed Data',
+              'Mean', '95% Confidence Interval']) plt.show()
+            </div>
+
+            <h3 style="margin-top: 2rem">Practical Considerations</h3>
+
+            <div class="concept-cards">
+              <div class="concept-card">
+                <h3 class="concept-card-title">Scalability</h3>
+                <p>
+                  Standard GP implementations scale poorly with the number of
+                  data points (O(n³)). For large datasets, consider sparse
+                  approximation methods like SGPR or SVGP.
+                </p>
+              </div>
+
+              <div class="concept-card">
+                <h3 class="concept-card-title">Multi-dimensional Inputs</h3>
+                <p>
+                  For high-dimensional inputs, consider using automatic
+                  relevance determination (ARD) kernels, which can learn the
+                  importance of each dimension.
+                </p>
+              </div>
+
+              <div class="concept-card">
+                <h3 class="concept-card-title">Non-Gaussian Likelihoods</h3>
+                <p>
+                  For non-Gaussian outcomes (e.g., binary, count data), use
+                  appropriate likelihood functions and approximation methods
+                  like the Laplace approximation or variational inference.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="tab-content"
+            data-tab-content="resources"
+          >
+            <h3>Further Learning Resources</h3>
+
+            <div class="further-reading">
+              <h4 style="margin-bottom: 1rem">Recommended Books</h4>
+
+              <div class="reading-list">
+                <div class="reading-item">
+                  <img
+                    src="/api/placeholder/300/150"
+                    alt="Book cover"
+                    class="reading-img"
+                  />
+                  <div class="reading-content">
+                    <h5 class="reading-title">
+                      Gaussian Processes for Machine Learning
+                    </h5>
+                    <p class="reading-author">Rasmussen & Williams</p>
+                    <p class="reading-description">
+                      The definitive reference on Gaussian Processes, covering
+                      theoretical foundations and practical applications.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="reading-item">
+                  <img
+                    src="/api/placeholder/300/150"
+                    alt="Book cover"
+                    class="reading-img"
+                  />
+                  <div class="reading-content">
+                    <h5 class="reading-title">Bayesian Optimization</h5>
+                    <p class="reading-author">Frazier</p>
+                    <p class="reading-description">
+                      A comprehensive guide to Bayesian optimization theory and
+                      applications.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="reading-item">
+                  <img
+                    src="/api/placeholder/300/150"
+                    alt="Book cover"
+                    class="reading-img"
+                  />
+                  <div class="reading-content">
+                    <h5 class="reading-title">
+                      Pattern Recognition and Machine Learning
+                    </h5>
+                    <p class="reading-author">Bishop</p>
+                    <p class="reading-description">
+                      Contains an excellent introduction to Gaussian Processes
+                      in the context of broader machine learning.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <h4 style="margin-top: 2rem">Online Courses</h4>
+            <ul>
+              <li>
+                <a
+                  href="#"
+                  target="_blank"
+                  >"Probabilistic Machine Learning"</a
+                >
+                by Neil Lawrence
+              </li>
+              <li>
+                <a
+                  href="#"
+                  target="_blank"
+                  >"Bayesian Methods for Machine Learning"</a
+                >
+                on Coursera
+              </li>
+              <li>
+                <a
+                  href="#"
+                  target="_blank"
+                  >"Gaussian Processes"</a
+                >
+                by Marc Deisenroth
+              </li>
+            </ul>
+
+            <h4 style="margin-top: 1.5rem">Software Libraries</h4>
+            <ul>
+              <li>
+                <a
+                  href="https://gpytorch.ai/"
+                  target="_blank"
+                  >GPyTorch</a
+                >
+                - GPU-accelerated Gaussian Processes in PyTorch
+              </li>
+              <li>
+                <a
+                  href="https://gpflow.github.io/GPflow/"
+                  target="_blank"
+                  >GPflow</a
+                >
+                - Gaussian Processes in TensorFlow
+              </li>
+              <li>
+                <a
+                  href="https://botorch.org/"
+                  target="_blank"
+                  >BoTorch</a
+                >
+                - Bayesian optimization in PyTorch
+              </li>
+              <li>
+                <a
+                  href="https://scikit-learn.org/stable/modules/gaussian_process.html"
+                  target="_blank"
+                  >scikit-learn GP</a
+                >
+                - Simple GP implementation in scikit-learn
+              </li>
+            </ul>
+
+            <h3 style="margin-top: 2.5rem">Glossary of Terms</h3>
+
+            <div class="glossary-list">
+              <dl>
+                <div class="glossary-term">
+                  <dt>Gaussian Process</dt>
+                  <dd>
+                    A collection of random variables, any finite number of which
+                    have a joint Gaussian distribution. Used to define a
+                    distribution over functions.
+                  </dd>
+                </div>
+
+                <div class="glossary-term">
+                  <dt>Kernel / Covariance Function</dt>
+                  <dd>
+                    A function that measures the similarity between inputs. It
+                    determines how points in the input space influence each
+                    other.
+                  </dd>
+                </div>
+
+                <div class="glossary-term">
+                  <dt>Mean Function</dt>
+                  <dd>
+                    A function that specifies the expected value of the process
+                    at each input point.
+                  </dd>
+                </div>
+
+                <div class="glossary-term">
+                  <dt>Hyperparameters</dt>
+                  <dd>
+                    Parameters of the Gaussian Process model that are not
+                    directly learned from the data but are optimized to maximize
+                    the likelihood of the observations.
+                  </dd>
+                </div>
+
+                <div class="glossary-term">
+                  <dt>Posterior Distribution</dt>
+                  <dd>
+                    The conditional distribution of the Gaussian Process given
+                    observed data points.
+                  </dd>
+                </div>
+
+                <div class="glossary-term">
+                  <dt>Acquisition Function</dt>
+                  <dd>
+                    In Bayesian optimization, a function that determines which
+                    points to evaluate next by balancing exploration and
+                    exploitation.
+                  </dd>
+                </div>
+
+                <div class="glossary-term">
+                  <dt>Expected Improvement (EI)</dt>
+                  <dd>
+                    A common acquisition function that measures the expected
+                    improvement over the current best solution.
+                  </dd>
+                </div>
+
+                <div class="glossary-term">
+                  <dt>Upper Confidence Bound (UCB)</dt>
+                  <dd>
+                    An acquisition function that balances exploitation (mean)
+                    and exploration (variance) through a weighted sum.
+                  </dd>
+                </div>
+
+                <div class="glossary-term">
+                  <dt>Marginal Likelihood</dt>
+                  <dd>
+                    The probability of the observed data given the Gaussian
+                    Process model, integrated over all possible functions.
+                  </dd>
+                </div>
+
+                <div class="glossary-term">
+                  <dt>Stationarity</dt>
+                  <dd>
+                    A property where the covariance between two points depends
+                    only on their distance, not their absolute locations.
+                  </dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-col">
+            <h3>About</h3>
+            <p>
+              This educational course brings together state-of-the-art
+              statistical methods with practical operational excellence
+              frameworks, helping organizations manage complexity and
+              randomness.
+            </p>
+          </div>
+
+          <div class="footer-col">
+            <h3>Quick Links</h3>
+            <ul class="footer-links">
+              <li class="footer-link"><a href="index.html">Home</a></li>
+              <li class="footer-link">
+                <a href="manufacturing-case.html">Manufacturing Case</a>
+              </li>
+              <li class="footer-link">
+                <a href="finance-case.html">Finance Case</a>
+              </li>
+              <li class="footer-link">
+                <a href="government-case.html">Government Case</a>
+              </li>
+              <li class="footer-link">
+                <a href="gaussian-processes.html">Gaussian Processes</a>
+              </li>
+              <li class="footer-link">
+                <a href="instructor-resources.html">Instructor Resources</a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h3>Resources</h3>
+            <ul class="footer-links">
+              <li class="footer-link"><a href="#">Lecture Slides</a></li>
+              <li class="footer-link"><a href="#">Assignment Templates</a></li>
+              <li class="footer-link"><a href="#">Grading Rubrics</a></li>
+              <li class="footer-link"><a href="#">Discussion Guides</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="copyright">
+          <p>&copy; 2025 Operational Excellence Course. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Mobile menu toggle
+      const mobileMenuBtn = document.querySelector(".mobile-menu-btn");
+      const navLinks = document.querySelector(".nav-links");
+
+      mobileMenuBtn.addEventListener("click", () => {
+        navLinks.classList.toggle("show");
+      });
+
+      // Active link highlighting
+      const currentPage = window.location.pathname.split("/").pop();
+      const navLinkElements = document.querySelectorAll(".nav-link");
+
+      navLinkElements.forEach((link) => {
+        const linkPage = link.getAttribute("href");
+        if (linkPage === currentPage) {
+          link.classList.add("active");
+        } else if (currentPage === "" && linkPage === "index.html") {
+          link.classList.add("active");
+        } else {
+          link.classList.remove("active");
+        }
+      });
+
+      // Tab functionality
+      const tabs = document.querySelectorAll(".tab");
+      const tabContents = document.querySelectorAll(".tab-content");
+
+      if (tabs.length > 0 && tabContents.length > 0) {
+        tabs.forEach((tab) => {
+          tab.addEventListener("click", () => {
+            tabs.forEach((t) => t.classList.remove("active"));
+            tabContents.forEach((tc) => tc.classList.remove("active"));
+
+            tab.classList.add("active");
+            const activeTab = tab.getAttribute("data-tab");
+            document
+              .querySelector(`[data-tab-content="${activeTab}"]`)
+              .classList.add("active");
+          });
+        });
+      }
+
+      // Tool frame interactions
+      const exploreBtn = document.getElementById("explore-btn");
+      const sampleBtn = document.getElementById("sample-btn");
+      const resetBtn = document.getElementById("reset-btn");
+      const visualizationFrame = document.getElementById("visualization-frame");
+
+      if (exploreBtn && sampleBtn && resetBtn && visualizationFrame) {
+        exploreBtn.addEventListener("click", () => {
+          visualizationFrame.contentWindow.postMessage(
+            { action: "explore" },
+            "*"
+          );
+        });
+
+        sampleBtn.addEventListener("click", () => {
+          visualizationFrame.contentWindow.postMessage(
+            { action: "sample" },
+            "*"
+          );
+        });
+
+        resetBtn.addEventListener("click", () => {
+          visualizationFrame.contentWindow.postMessage(
+            { action: "reset" },
+            "*"
+          );
+        });
+      }
+
+      // Listen for resize messages from iframe
+      window.addEventListener("message", function (event) {
+        if (event.data && event.data.type === "resize-iframe") {
+          const iframe = document.getElementById("visualization-frame");
+          iframe.style.height = `${event.data.height}px`;
+        }
+      });
+    </script>
+  </body>
+</html>

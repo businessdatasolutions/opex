@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Apex Investment Partners Case Study</title>
+    <style>
+      :root {
+        --primary: #2563eb;
+        --primary-dark: #1e40af;
+        --secondary: #0ea5e9;
+        --accent: #8b5cf6;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --dark: #1e293b;
+        --light: #f8fafc;
+        --text: #334155;
+        --text-light: #64748b;
+        --border: #e2e8f0;
+        --shadow: rgba(0, 0, 0, 0.05);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--text);
+        background-color: var(--light);
+        line-height: 1.6;
+      }
+
+      a {
+        color: var(--primary);
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      a:hover {
+        color: var(--primary-dark);
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      header {
+        background-color: white;
+        box-shadow: 0 2px 10px var(--shadow);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 0;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .logo-icon {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        background-color: var(--primary);
+        color: white;
+        font-weight: bold;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+      }
+
+      .nav-link {
+        font-weight: 500;
+        transition: all 0.3s ease;
+        position: relative;
+        padding: 0.5rem 0;
+      }
+
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: var(--primary);
+        transition: width 0.3s ease;
+      }
+
+      .nav-link:hover::after,
+      .nav-link.active::after {
+        width: 100%;
+      }
+
+      .nav-link.active {
+        color: var(--primary-dark);
+        font-weight: 600;
+      }
+
+      .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--dark);
+      }
+
+      main {
+        min-height: calc(100vh - 136px);
+        padding: 2rem 0;
+      }
+
+      .case-header {
+        background: linear-gradient(135deg, #10b981, #059669);
+        padding: 3rem 0;
+        margin-bottom: 2rem;
+        color: white;
+        border-radius: 16px;
+      }
+
+      .case-header-content {
+        padding: 0 2rem;
+      }
+
+      .case-title {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .case-subtitle {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        max-width: 800px;
+      }
+
+      .case-meta {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+      }
+
+      .case-meta-item {
+        background-color: rgba(255, 255, 255, 0.2);
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .case-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px var(--shadow);
+        margin-bottom: 2rem;
+      }
+
+      .case-section {
+        margin-bottom: 2rem;
+      }
+
+      .case-section-title {
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+        color: var(--dark);
+        border-bottom: 2px solid var(--border);
+        padding-bottom: 0.5rem;
+      }
+
+      .case-img {
+        width: 100%;
+        border-radius: 8px;
+        margin: 1.5rem 0;
+      }
+
+      .case-quote {
+        background-color: #f1f5f9;
+        border-left: 4px solid var(--success);
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        border-radius: 0 8px 8px 0;
+        font-style: italic;
+      }
+
+      .case-quote cite {
+        display: block;
+        margin-top: 0.5rem;
+        font-style: normal;
+        font-weight: 600;
+      }
+
+      .case-questions {
+        background-color: #f8fafc;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+      }
+
+      .case-questions h3 {
+        margin-bottom: 1rem;
+        color: var(--success);
+      }
+
+      .case-questions ol {
+        padding-left: 1.5rem;
+      }
+
+      .case-questions li {
+        margin-bottom: 0.75rem;
+      }
+
+      .tool-container {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1rem;
+        margin: 2rem 0;
+        background-color: #f8fafc;
+      }
+
+      .tool-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .tool-title {
+        font-size: 1.3rem;
+        color: var(--dark);
+      }
+
+      .tool-actions {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .action-btn {
+        background-color: var(--success);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .action-btn:hover {
+        background-color: #059669;
+      }
+
+      .tab-container {
+        margin-bottom: 20px;
+      }
+
+      .tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid var(--border);
+        overflow-x: auto;
+        padding-bottom: 5px;
+      }
+
+      .tab {
+        padding: 10px 15px;
+        border-radius: 8px 8px 0 0;
+        background-color: #e2e8f0;
+        cursor: pointer;
+        border: 1px solid #cbd5e1;
+        border-bottom: none;
+        white-space: nowrap;
+      }
+
+      .tab.active {
+        background-color: var(--success);
+        color: white;
+        font-weight: bold;
+      }
+
+      .tab-content {
+        display: none;
+        padding: 20px;
+        background-color: #f8fafc;
+        border-radius: 0 0 8px 8px;
+        border: 1px solid var(--border);
+        border-top: none;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      .tool-frame {
+        width: 100%;
+        height: 800px;
+        border: none;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .case-summary {
+        background-color: #ecfdf5;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        border-left: 4px solid var(--success);
+      }
+
+      .case-summary h3 {
+        color: var(--success);
+        margin-bottom: 0.75rem;
+      }
+
+      .key-points {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin: 2rem 0;
+      }
+
+      .key-point {
+        flex: 1;
+        min-width: 250px;
+        background-color: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 4px var(--shadow);
+        border-top: 3px solid var(--success);
+      }
+
+      .key-point-title {
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-bottom: 0.75rem;
+        color: #059669;
+      }
+
+      .implementation-steps {
+        background-color: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        box-shadow: 0 2px 4px var(--shadow);
+      }
+
+      .step {
+        display: flex;
+        margin-bottom: 1.5rem;
+        position: relative;
+      }
+
+      .step:last-child {
+        margin-bottom: 0;
+      }
+
+      .step-number {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: var(--success);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        flex-shrink: 0;
+        margin-right: 1rem;
+      }
+
+      .step-content {
+        padding-top: 0.5rem;
+      }
+
+      .step-title {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--dark);
+      }
+
+      .step:not(:last-child) .step-number::after {
+        content: "";
+        position: absolute;
+        top: 40px;
+        left: 20px;
+        width: 2px;
+        height: calc(100% - 40px);
+        background-color: var(--border);
+      }
+
+      .chart-container {
+        background-color: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        box-shadow: 0 2px 4px var(--shadow);
+        text-align: center;
+      }
+
+      .chart-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--dark);
+      }
+
+      footer {
+        background-color: var(--dark);
+        color: white;
+        padding: 2rem 0;
+        margin-top: 3rem;
+      }
+
+      .footer-content {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 2rem;
+      }
+
+      .footer-col {
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .footer-col h3 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        position: relative;
+        padding-bottom: 0.5rem;
+      }
+
+      .footer-col h3::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 40px;
+        height: 2px;
+        background-color: var(--success);
+      }
+
+      .footer-links {
+        list-style: none;
+      }
+
+      .footer-link {
+        margin-bottom: 0.5rem;
+      }
+
+      .footer-link a {
+        color: rgba(255, 255, 255, 0.7);
+        transition: color 0.3s ease;
+      }
+
+      .footer-link a:hover {
+        color: white;
+      }
+
+      .copyright {
+        text-align: center;
+        padding-top: 2rem;
+        margin-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      @media (max-width: 768px) {
+        .navbar {
+          flex-direction: column;
+          padding: 1rem;
+        }
+
+        .nav-links {
+          margin-top: 1rem;
+          flex-direction: column;
+          gap: 1rem;
+          width: 100%;
+        }
+
+        .mobile-menu-btn {
+          display: block;
+          position: absolute;
+          top: 1rem;
+          right: 1rem;
+        }
+
+        .nav-links {
+          display: none;
+        }
+
+        .nav-links.show {
+          display: flex;
+        }
+
+        .case-title {
+          font-size: 2rem;
+        }
+
+        .case-content {
+          padding: 1.5rem;
+        }
+
+        .case-header {
+          padding: 2rem 0;
+        }
+
+        .case-header-content {
+          padding: 0 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <nav class="navbar">
+          <a
+            href="index.html"
+            class="logo"
+          >
+            <div class="logo-icon">OE</div>
+            <span>Operational Excellence</span>
+          </a>
+          <button class="mobile-menu-btn">≡</button>
+          <ul class="nav-links">
+            <li>
+              <a
+                href="index.html"
+                class="nav-link"
+                >Home</a
+              >
+            </li>
+            <li>
+              <a
+                href="manufacturing-case.html"
+                class="nav-link"
+                >Manufacturing</a
+              >
+            </li>
+            <li>
+              <a
+                href="finance-case.html"
+                class="nav-link active"
+                >Finance</a
+              >
+            </li>
+            <li>
+              <a
+                href="government-case.html"
+                class="nav-link"
+                >Government</a
+              >
+            </li>
+            <li>
+              <a
+                href="gaussian-processes.html"
+                class="nav-link"
+                >Gaussian Processes</a
+              >
+            </li>
+            <li>
+              <a
+                href="instructor-resources.html"
+                class="nav-link"
+                >Instructor Resources</a
+              >
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="container">
+        <div class="case-header">
+          <div class="case-header-content">
+            <h1 class="case-title">
+              Apex Investment Partners: Portfolio Optimization Under Uncertainty
+            </h1>
+            <p class="case-subtitle">
+              A Case Study on Operational Excellence in Quantitative Finance
+            </p>
+            <div class="case-meta">
+              <span class="case-meta-item">💹 Finance</span>
+              <span class="case-meta-item">📊 Portfolio Management</span>
+              <span class="case-meta-item">📈 Risk Assessment</span>
+              <span class="case-meta-item">🧮 Quantitative Methods</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="case-summary">
+          <h3>Case Overview</h3>
+          <p>
+            Apex Investment Partners, a mid-sized quantitative hedge fund, faced
+            increasing portfolio volatility despite sophisticated risk
+            management systems. This case explores how they used Bayesian
+            optimization to model both expected returns and their uncertainty as
+            functions of market conditions, leading to more robust investment
+            strategies.
+          </p>
+        </div>
+
+        <div class="tab-container">
+          <div class="tabs">
+            <div
+              class="tab active"
+              data-tab="case-narrative"
+            >
+              Case Narrative
+            </div>
+            <div
+              class="tab"
+              data-tab="interactive-tool"
+            >
+              Interactive Tool
+            </div>
+            <div
+              class="tab"
+              data-tab="discussion-questions"
+            >
+              Discussion Questions
+            </div>
+            <div
+              class="tab"
+              data-tab="resources"
+            >
+              Additional Resources
+            </div>
+          </div>
+
+          <div
+            class="tab-content active"
+            data-tab-content="case-narrative"
+          >
+            <div class="case-content">
+              <div class="case-section">
+                <h2 class="case-section-title">Background</h2>
+                <p>
+                  Apex Investment Partners is a mid-sized quantitative hedge
+                  fund with approximately $2.3 billion in assets under
+                  management. The firm specializes in medium-frequency trading
+                  strategies that typically hold positions for 2-10 days. While
+                  Apex had performed relatively well since its founding in 2018,
+                  CIO Dr. Mei Zhang noticed that their returns had become
+                  increasingly volatile over the past year, with several months
+                  of significant drawdowns despite sophisticated risk management
+                  systems.
+                </p>
+                <p>
+                  Traditional portfolio optimization at Apex, like most
+                  quantitative funds, relied on the Markowitz mean-variance
+                  framework and its modern extensions. Their system allocated
+                  capital based on expected returns and a covariance matrix that
+                  measured correlations between assets. However, this approach
+                  assumes that expected returns and volatilities can be
+                  estimated independently of market conditions and each other.
+                </p>
+                <p>
+                  As market volatility increased throughout 2024, Apex found
+                  that their models consistently underestimated actual risk
+                  during turbulent periods and missed opportunities during
+                  calmer markets. This pattern suggested a fundamental flaw in
+                  their approach.
+                </p>
+                <img
+                  src="assets/images/finance/trading-floor.png"
+                  alt="Trading floor with data visualization screens"
+                  class="case-img"
+                />
+              </div>
+
+              <div class="case-section">
+                <h2 class="case-section-title">The Challenge</h2>
+                <p>
+                  After an extensive review, Dr. Zhang's team identified that
+                  the key issue wasn't with their return forecasting models but
+                  rather with how these forecasts were incorporated into the
+                  portfolio optimization process. Specifically, they discovered
+                  two critical insights:
+                </p>
+                <ol>
+                  <li>
+                    <strong>Input-Dependent Uncertainty</strong>: The accuracy
+                    of their return predictions varied dramatically depending on
+                    specific market conditions. During certain regimes (like
+                    high VIX periods), their forecasts became much less
+                    reliable.
+                  </li>
+                  <li>
+                    <strong>Variance-Mean Coupling</strong>: The relationship
+                    between expected returns and volatility wasn't static but
+                    dynamically linked to the same underlying factors that drove
+                    their trading signals.
+                  </li>
+                </ol>
+                <p>The team needed to develop a new framework that could:</p>
+                <ul>
+                  <li>
+                    Properly account for market-dependent forecast uncertainty
+                  </li>
+                  <li>
+                    Optimize allocations by considering both expected returns
+                    and the reliability of those expectations
+                  </li>
+                  <li>
+                    Adapt to changing market conditions without manual
+                    intervention
+                  </li>
+                </ul>
+              </div>
+
+              <div class="case-section">
+                <h2 class="case-section-title">
+                  The Bayesian Optimization Approach
+                </h2>
+                <p>
+                  Dr. Zhang collaborated with Dr. Julian Montgomery, the firm's
+                  head of research, to implement a Bayesian approach to
+                  portfolio construction. Their solution modeled both expected
+                  returns and their uncertainty as functions of the same
+                  underlying variables.
+                </p>
+                <div class="case-quote">
+                  "Traditional models treat uncertainty as a fixed attribute,
+                  but in financial markets, uncertainty itself is dynamic and
+                  dependent on market conditions. Our breakthrough was modeling
+                  this relationship explicitly."
+                  <cite>— Dr. Mei Zhang, Chief Investment Officer</cite>
+                </div>
+                <p>The model they developed took the form:</p>
+                <p>f(x) ~ N(μ(x₁, x₂), σ²(x₁, x₂))</p>
+                <p>Where:</p>
+                <ul>
+                  <li>
+                    x₁ represented the market volatility factor (derived from
+                    VIX and other volatility measures)
+                  </li>
+                  <li>
+                    x₂ represented the market momentum factor (derived from
+                    cross-sectional momentum signals)
+                  </li>
+                  <li>μ(x₁, x₂) represented the expected portfolio return</li>
+                  <li>
+                    σ²(x₁, x₂) represented the variance (uncertainty) of that
+                    return prediction
+                  </li>
+                </ul>
+                <p>
+                  Based on historical data, they determined that these functions
+                  could be approximated as:
+                </p>
+                <p>
+                  μ(x₁, x₂) = x₁² - 2x₁x₂ + cos(x₂)<br />
+                  σ²(x₁, x₂) = cos(x₁² + x₂²)
+                </p>
+                <p>
+                  This mathematical formulation captured the complex, non-linear
+                  relationships they observed in their historical performance
+                  data.
+                </p>
+              </div>
+
+              <div class="chart-container">
+                <h3 class="chart-title">
+                  Performance Before and After Bayesian Optimization
+                  Implementation
+                </h3>
+                <img
+                  src="/api/placeholder/800/400"
+                  alt="Chart showing performance comparison"
+                  class="case-img"
+                />
+                <p>
+                  <em
+                    >The chart shows cumulative returns before (red) and after
+                    (green) implementation, demonstrating both improved returns
+                    and reduced drawdowns.</em
+                  >
+                </p>
+              </div>
+
+              <div class="case-section">
+                <h2 class="case-section-title">
+                  Implementation and Visualization
+                </h2>
+                <p>
+                  To help the portfolio managers understand and utilize this
+                  model, the research team built an interactive visualization
+                  tool. This allowed them to explore how different market
+                  conditions affected both expected returns and the confidence
+                  in those expectations.
+                </p>
+                <p>The visualization revealed several critical insights:</p>
+                <ol>
+                  <li>
+                    <strong
+                      >High Volatility/Low Momentum Regime (x₁ high, x₂
+                      low)</strong
+                    >: Expected returns were high but extremely uncertain.
+                  </li>
+                  <li>
+                    <strong
+                      >Low Volatility/High Momentum Regime (x₁ low, x₂
+                      high)</strong
+                    >: Expected returns were moderate but much more predictable.
+                  </li>
+                  <li>
+                    <strong>Balanced Regime (x₁ ≈ x₂)</strong>: Offered the best
+                    trade-off between expected returns and confidence.
+                  </li>
+                </ol>
+                <p>
+                  Using this tool, portfolio managers could see that the
+                  traditional approach of simply maximizing expected returns
+                  would lead them to overallocate during high-volatility periods
+                  precisely when forecasts were least reliable.
+                </p>
+              </div>
+
+              <div class="implementation-steps">
+                <h3 style="margin-bottom: 1.5rem">Implementation Process</h3>
+
+                <div class="step">
+                  <div class="step-number">1</div>
+                  <div class="step-content">
+                    <h4 class="step-title">Model Development & Testing</h4>
+                    <p>
+                      Created and calibrated Bayesian models using historical
+                      market data. Back-tested the approach against traditional
+                      portfolio optimization methods using out-of-sample data.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="step">
+                  <div class="step-number">2</div>
+                  <div class="step-content">
+                    <h4 class="step-title">
+                      Integration with Trading Infrastructure
+                    </h4>
+                    <p>
+                      Developed APIs to connect the Bayesian optimization system
+                      with existing trading platforms. Implemented real-time
+                      data feeds for volatility and momentum factors.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="step">
+                  <div class="step-number">3</div>
+                  <div class="step-content">
+                    <h4 class="step-title">Visualization Tool Development</h4>
+                    <p>
+                      Created interactive dashboards allowing portfolio managers
+                      to visualize model outputs and understand how market
+                      conditions affect forecast reliability.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="step">
+                  <div class="step-number">4</div>
+                  <div class="step-content">
+                    <h4 class="step-title">Trader Education & Adoption</h4>
+                    <p>
+                      Conducted workshops to help quantitative analysts and
+                      portfolio managers understand the new approach.
+                      Implemented a phased adoption strategy starting with a
+                      small portion of capital.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="step">
+                  <div class="step-number">5</div>
+                  <div class="step-content">
+                    <h4 class="step-title">Continuous Refinement Process</h4>
+                    <p>
+                      Established a framework for ongoing model improvement
+                      based on new data. Created a weekly model review meeting
+                      to assess performance and adjust parameters as needed.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="case-section">
+                <h2 class="case-section-title">Implementation Challenges</h2>
+                <p>
+                  While the mathematical model was sound, implementing it within
+                  Apex's operational framework presented several challenges:
+                </p>
+                <ol>
+                  <li>
+                    <strong>Model Integration</strong>: Connecting the Bayesian
+                    model with existing trading systems and risk controls.
+                  </li>
+                  <li>
+                    <strong>Parameter Estimation</strong>: Developing robust
+                    methods to continually update the parameters of the mean and
+                    variance functions as new data became available.
+                  </li>
+                  <li>
+                    <strong>Trader Adoption</strong>: Convincing the portfolio
+                    managers, many with traditional finance backgrounds, to
+                    trust a probabilistic approach that acknowledged uncertainty
+                    rather than providing point estimates.
+                  </li>
+                  <li>
+                    <strong>Computational Efficiency</strong>: Running the
+                    Bayesian optimization for thousands of potential assets
+                    within the trading window.
+                  </li>
+                </ol>
+                <div class="case-quote">
+                  "The biggest challenge wasn't technical—it was cultural. We
+                  had to shift from a mindset of 'what's the best allocation?'
+                  to 'how confident are we in our allocation decisions under
+                  different market conditions?'"
+                  <cite>— Dr. Julian Montgomery, Head of Research at Apex</cite>
+                </div>
+              </div>
+
+              <div class="case-section">
+                <h2 class="case-section-title">Results and Impact</h2>
+                <p>
+                  After six months of implementation and refinement, the results
+                  showed significant improvement:
+                </p>
+                <ul>
+                  <li>
+                    <strong>Reduced Drawdowns</strong>: Maximum monthly
+                    drawdowns decreased by 42% compared to the previous year.
+                  </li>
+                  <li>
+                    <strong>Increased Sharpe Ratio</strong>: The annualized
+                    Sharpe ratio improved from 1.3 to 1.8.
+                  </li>
+                  <li>
+                    <strong>More Consistent Returns</strong>: Month-to-month
+                    return volatility decreased by 28%.
+                  </li>
+                  <li>
+                    <strong>Enhanced Capital Efficiency</strong>: The fund could
+                    deploy 15% more capital at the same risk levels.
+                  </li>
+                </ul>
+                <p>
+                  Most importantly, the system proved particularly valuable
+                  during the market turbulence of late 2024, when traditional
+                  quantitative strategies suffered significant losses. During
+                  this period, Apex's new approach automatically reduced
+                  position sizes in areas where uncertainty was high, preserving
+                  capital for deployment when conditions improved.
+                </p>
+              </div>
+
+              <div class="key-points">
+                <div class="key-point">
+                  <h4 class="key-point-title">Beyond Static Optimization</h4>
+                  <p>
+                    Traditional optimization approaches often assume fixed
+                    relationships between inputs and outputs, missing the
+                    dynamic, condition-dependent nature of real-world systems.
+                  </p>
+                </div>
+                <div class="key-point">
+                  <h4 class="key-point-title">
+                    Modeling Uncertainty Explicitly
+                  </h4>
+                  <p>
+                    By modeling uncertainty as an input-dependent function
+                    rather than a constant, organizations can make more robust
+                    decisions in variable environments.
+                  </p>
+                </div>
+                <div class="key-point">
+                  <h4 class="key-point-title">
+                    Visualization for Understanding
+                  </h4>
+                  <p>
+                    Complex statistical concepts became accessible to
+                    non-technical stakeholders through interactive
+                    visualization, driving adoption and trust.
+                  </p>
+                </div>
+              </div>
+
+              <div class="case-section">
+                <h2 class="case-section-title">
+                  Appendix: Mathematical Details
+                </h2>
+                <p>The portfolio optimization problem was formulated as:</p>
+                <p>maximize E[R(w)] - λ × σ²[R(w)]</p>
+                <p>Where:</p>
+                <ul>
+                  <li>w is the vector of portfolio weights</li>
+                  <li>E[R(w)] is the expected return of the portfolio</li>
+                  <li>σ²[R(w)] is the variance of the portfolio return</li>
+                  <li>λ is a risk aversion parameter</li>
+                </ul>
+                <p>
+                  The innovation was in making both E[R(w)] and σ²[R(w)]
+                  functions of the market conditions (x₁, x₂), rather than
+                  treating them as independent inputs.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="tab-content"
+            data-tab-content="interactive-tool"
+          >
+            <h3 style="margin-bottom: 1rem">
+              Apex Portfolio Optimization Tool
+            </h3>
+            <p>
+              Use this interactive visualization to explore how market
+              volatility (x₁) and momentum (x₂) affect both expected returns and
+              the uncertainty around those expectations. This tool models the
+              relationship that Apex Investment Partners discovered and used to
+              improve their portfolio construction process.
+            </p>
+
+            <div class="tool-container">
+              <div class="tool-header">
+                <div class="tool-title">Bayesian Portfolio Optimizer</div>
+                <div class="tool-actions">
+                  <button
+                    class="action-btn"
+                    id="reset-btn"
+                  >
+                    Reset
+                  </button>
+                  <button
+                    class="action-btn"
+                    id="optimal-btn"
+                  >
+                    Find Optimal
+                  </button>
+                </div>
+              </div>
+
+              <iframe
+                src="tools/bayesian-model-visualization.html"
+                class="tool-frame"
+                id="visualization-frame"
+              ></iframe>
+            </div>
+
+            <div class="case-quote">
+              "This visualization completely changed how our portfolio managers
+              thought about market dynamics. Instead of just seeing the mean
+              expected return, they could now visualize the 'confidence
+              landscape' across different market conditions."
+              <cite>— Dr. Mei Zhang, CIO at Apex Investment Partners</cite>
+            </div>
+
+            <p>
+              In the visualization, pay special attention to regions where the
+              variance function (right plot) shows low values (blue areas).
+              These represent market conditions where return forecasts are more
+              reliable, which Apex found to be crucial for stable long-term
+              performance.
+            </p>
+          </div>
+
+          <div
+            class="tab-content"
+            data-tab-content="discussion-questions"
+          >
+            <h3>Discussion Questions</h3>
+
+            <div class="case-questions">
+              <ol>
+                <li>
+                  How might other financial institutions adapt this approach to
+                  different investment horizons (high-frequency trading or
+                  long-term investing)?
+                </li>
+                <li>
+                  What organizational challenges might arise when implementing
+                  probabilistic methods in traditionally deterministic domains
+                  like finance?
+                </li>
+                <li>
+                  How could this approach be extended to incorporate additional
+                  factors beyond the two (volatility and momentum) used in this
+                  case?
+                </li>
+                <li>
+                  What ethical considerations arise when using Bayesian
+                  optimization methods in financial markets, particularly
+                  regarding market impact and systemic risk?
+                </li>
+                <li>
+                  How might regulators respond to these more sophisticated
+                  approaches to risk management, and what disclosure
+                  requirements might be appropriate?
+                </li>
+              </ol>
+            </div>
+
+            <h3 style="margin-top: 2rem">Group Assignment</h3>
+            <p>
+              Working in groups of 3-4, develop a comprehensive analysis of Apex
+              Investment Partners' approach to portfolio optimization. Your
+              analysis should include:
+            </p>
+
+            <ol>
+              <li>
+                A critical evaluation of how Apex modeled input-dependent
+                uncertainty in financial markets
+              </li>
+              <li>
+                An exploration of how the Bayesian optimization model could be
+                extended to different asset classes or investment time horizons
+              </li>
+              <li>
+                A detailed implementation plan addressing both the technical and
+                organizational challenges in a financial institution
+              </li>
+              <li>
+                An assessment of potential regulatory and ethical implications
+                of using advanced probabilistic methods in investment management
+              </li>
+              <li>
+                A framework for evaluating the success of a Bayesian approach to
+                portfolio management beyond traditional metrics like Sharpe
+                ratio
+              </li>
+            </ol>
+
+            <p>
+              Your deliverable should include a 10-15 page written report and a
+              15-minute presentation. Be prepared to demonstrate your
+              understanding of the interactive visualization tool as part of
+              your presentation.
+            </p>
+          </div>
+
+          <div
+            class="tab-content"
+            data-tab-content="resources"
+          >
+            <h3>Additional Resources</h3>
+
+            <h4 style="margin-top: 1.5rem">Readings</h4>
+            <ul>
+              <li>
+                Zhang, M., & Montgomery, J. (2024). "Dynamic Uncertainty
+                Modeling in Quantitative Portfolio Management."
+                <em>Journal of Financial Data Science</em>, 6(2), 124-143.
+              </li>
+              <li>
+                Carvalho, R. (2023). "Beyond Markowitz: Bayesian Methods in
+                Modern Portfolio Theory." <em>Quantitative Finance</em>, 23(7),
+                892-915.
+              </li>
+              <li>
+                Black, F., & Litterman, R. (1992). "Global Portfolio
+                Optimization." <em>Financial Analysts Journal</em>, 48(5),
+                28-43.
+              </li>
+              <li>
+                Garleanu, N., & Pedersen, L. H. (2013). "Dynamic Trading with
+                Predictable Returns and Transaction Costs."
+                <em>Journal of Finance</em>, 68(6), 2309-2340.
+              </li>
+            </ul>
+
+            <h4 style="margin-top: 1.5rem">Videos</h4>
+            <ul>
+              <li>
+                "Bayesian Portfolio Construction: A New Paradigm" - Keynote by
+                Dr. Mei Zhang at the Quantitative Finance Summit (32 min)
+              </li>
+              <li>
+                "Visualizing Uncertainty in Market Forecasts" - Technical
+                presentation by Dr. Julian Montgomery (47 min)
+              </li>
+              <li>
+                "From Theory to Implementation: The Apex Case Study" - Panel
+                discussion with Apex's quantitative team (56 min)
+              </li>
+            </ul>
+
+            <h4 style="margin-top: 1.5rem">Tools & Templates</h4>
+            <ul>
+              <li>
+                Model Evaluation Framework for Bayesian Portfolio Optimization
+              </li>
+              <li>Risk Dashboard Design Template</li>
+              <li>Implementation Checklist for Quantitative Trading Systems</li>
+              <li>
+                Trader Training Guide: Understanding Probabilistic Forecasts
+              </li>
+            </ul>
+
+            <h4 style="margin-top: 1.5rem">Related Cases</h4>
+            <ul>
+              <li>
+                <a href="manufacturing-case.html"
+                  >PrecisionTech Manufacturing: Navigating Uncertainty in
+                  Production</a
+                >
+              </li>
+              <li>
+                <a href="government-case.html"
+                  >Westridge County: Optimizing Emergency Response in a Complex
+                  Environment</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-col">
+            <h3>About</h3>
+            <p>
+              This educational course brings together state-of-the-art
+              statistical methods with practical operational excellence
+              frameworks, helping organizations manage complexity and
+              randomness.
+            </p>
+          </div>
+
+          <div class="footer-col">
+            <h3>Quick Links</h3>
+            <ul class="footer-links">
+              <li class="footer-link"><a href="index.html">Home</a></li>
+              <li class="footer-link">
+                <a href="manufacturing-case.html">Manufacturing Case</a>
+              </li>
+              <li class="footer-link">
+                <a href="finance-case.html">Finance Case</a>
+              </li>
+              <li class="footer-link">
+                <a href="government-case.html">Government Case</a>
+              </li>
+              <li class="footer-link">
+                <a href="gaussian-processes.html">Gaussian Processes</a>
+              </li>
+              <li class="footer-link">
+                <a href="instructor-resources.html">Instructor Resources</a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h3>Resources</h3>
+            <ul class="footer-links">
+              <li class="footer-link"><a href="#">Lecture Slides</a></li>
+              <li class="footer-link"><a href="#">Assignment Templates</a></li>
+              <li class="footer-link"><a href="#">Grading Rubrics</a></li>
+              <li class="footer-link"><a href="#">Discussion Guides</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="copyright">
+          <p>&copy; 2025 Operational Excellence Course. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Mobile menu toggle
+      const mobileMenuBtn = document.querySelector(".mobile-menu-btn");
+      const navLinks = document.querySelector(".nav-links");
+
+      mobileMenuBtn.addEventListener("click", () => {
+        navLinks.classList.toggle("show");
+      });
+
+      // Active link highlighting
+      const currentPage = window.location.pathname.split("/").pop();
+      const navLinkElements = document.querySelectorAll(".nav-link");
+
+      navLinkElements.forEach((link) => {
+        const linkPage = link.getAttribute("href");
+        if (linkPage === currentPage) {
+          link.classList.add("active");
+        } else if (currentPage === "" && linkPage === "index.html") {
+          link.classList.add("active");
+        } else {
+          link.classList.remove("active");
+        }
+      });
+
+      // Tab functionality
+      const tabs = document.querySelectorAll(".tab");
+      const tabContents = document.querySelectorAll(".tab-content");
+
+      if (tabs.length > 0 && tabContents.length > 0) {
+        tabs.forEach((tab) => {
+          tab.addEventListener("click", () => {
+            tabs.forEach((t) => t.classList.remove("active"));
+            tabContents.forEach((tc) => tc.classList.remove("active"));
+
+            tab.classList.add("active");
+            const activeTab = tab.getAttribute("data-tab");
+            document
+              .querySelector(`[data-tab-content="${activeTab}"]`)
+              .classList.add("active");
+          });
+        });
+      }
+
+      // Tool frame interactions
+      const resetBtn = document.getElementById("reset-btn");
+      const optimalBtn = document.getElementById("optimal-btn");
+      const visualizationFrame = document.getElementById("visualization-frame");
+
+      if (resetBtn && optimalBtn && visualizationFrame) {
+        resetBtn.addEventListener("click", () => {
+          visualizationFrame.contentWindow.postMessage(
+            { action: "reset" },
+            "*"
+          );
+        });
+
+        optimalBtn.addEventListener("click", () => {
+          visualizationFrame.contentWindow.postMessage(
+            { action: "findOptimal" },
+            "*"
+          );
+        });
+      }
+
+      // Listen for resize messages from iframe
+      window.addEventListener("message", function (event) {
+        if (event.data && event.data.type === "resize-iframe") {
+          const iframe = document.getElementById("visualization-frame");
+          iframe.style.height = `${event.data.height}px`;
+        }
+      });
+    </script>
+  </body>
+</html>

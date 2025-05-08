@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Response Time Heat Map</title>
+    <!-- Load Plotly.js from CDN -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+      .map-container {
+        width: 100%;
+        height: 500px;
+        margin: 0 auto;
+      }
+      .chart-caption {
+        text-align: center;
+        font-style: italic;
+        margin-top: 10px;
+        color: #64748b;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      class="map-container"
+      id="heatmap"
+    ></div>
+    <p class="chart-caption">
+      Areas in red represent regions with both high average response times and
+      high variability.
+    </p>
+
+    <script>
+      // Create a simulated county map with response time data
+      function generateCountyData() {
+        // Define the grid size for our county map (20x20)
+        const gridSize = 20;
+        const x = Array.from({ length: gridSize }, (_, i) => i);
+        const y = Array.from({ length: gridSize }, (_, i) => i);
+
+        // Generate z values (response times)
+        // We'll simulate different regions with different characteristics
+        const z = [];
+
+        // Create urban center (lower left) with good response times but some variability
+        // Create suburbs (middle) with medium response times
+        // Create rural areas (upper right) with poor response times and high variability
+
+        for (let i = 0; i < gridSize; i++) {
+          const row = [];
+          for (let j = 0; j < gridSize; j++) {
+            // Base response time (minutes)
+            let responseTime = 10;
+
+            // Distance from urban center (0,0)
+            const distFromCenter = Math.sqrt(
+              Math.pow(i - 3, 2) + Math.pow(j - 3, 2)
+            );
+
+            // Distance from rural center (top right)
+            const distFromRural = Math.sqrt(
+              Math.pow(i - 16, 2) + Math.pow(j - 16, 2)
+            );
+
+            // Add time based on distance from urban center
+            responseTime += distFromCenter * 0.5;
+
+            // Add extra time and variability in rural areas
+            if (distFromRural < 8) {
+              // Increase response time in rural areas
+              responseTime += 5;
+
+              // Add high variability spots in rural areas
+              if (distFromRural < 4) {
+                responseTime += Math.random() * 10;
+              }
+            }
+
+            // Add variability in certain regions (to show hotspots)
+            if (
+              (i > 12 && i < 15 && j > 5 && j < 9) ||
+              (i > 7 && i < 11 && j > 15 && j < 18)
+            ) {
+              responseTime += Math.random() * 15;
+            }
+
+            // Add geographic barriers (like rivers, mountains)
+            if (
+              (i > 5 && i < 15 && j === 10) ||
+              (i === 10 && j > 5 && j < 15)
+            ) {
+              responseTime += 8;
+            }
+
+            // Add noise
+            responseTime += Math.random() * 2;
+
+            // Cap response times to reasonable values
+            responseTime = Math.min(Math.max(responseTime, 5), 25);
+
+            row.push(responseTime);
+          }
+          z.push(row);
+        }
+
+        return { x, y, z };
+      }
+
+      // Generate data
+      const data = generateCountyData();
+
+      // Create annotation for urban center
+      const annotations = [
+        {
+          x: 3,
+          y: 3,
+          text: "Urban<br>Center",
+          showarrow: false,
+          font: {
+            color: "white",
+            size: 10,
+          },
+        },
+        {
+          x: 16,
+          y: 16,
+          text: "Rural<br>Area",
+          showarrow: false,
+          font: {
+            color: "white",
+            size: 10,
+          },
+        },
+        {
+          x: 10,
+          y: 16.5,
+          text: "High Variability<br>Region",
+          showarrow: true,
+          arrowhead: 2,
+          arrowsize: 1,
+          arrowwidth: 1,
+          ax: 0,
+          ay: -30,
+        },
+        {
+          x: 13.5,
+          y: 7,
+          text: "High Variability<br>Region",
+          showarrow: true,
+          arrowhead: 2,
+          arrowsize: 1,
+          arrowwidth: 1,
+          ax: 0,
+          ay: -30,
+        },
+        {
+          x: 10,
+          y: 10,
+          text: "Geographic<br>Barrier",
+          showarrow: false,
+          font: {
+            color: "white",
+            size: 10,
+          },
+        },
+      ];
+
+      // Create the heat map
+      const heatmap = {
+        x: data.x,
+        y: data.y,
+        z: data.z,
+        type: "heatmap",
+        colorscale: [
+          [0, "rgb(0, 100, 255)"], // Low response time (good): blue
+          [0.4, "rgb(0, 255, 255)"], // Below average: cyan
+          [0.5, "rgb(130, 255, 50)"], // Average: green
+          [0.6, "rgb(255, 255, 0)"], // Above average: yellow
+          [0.8, "rgb(255, 130, 0)"], // High: orange
+          [1, "rgb(255, 0, 0)"], // Very high (poor): red
+        ],
+        colorbar: {
+          title: "Response<br>Time (min)",
+          titleside: "right",
+          tickmode: "array",
+          tickvals: [5, 10, 15, 20, 25],
+          ticktext: ["5", "10", "15", "20", "25+"],
+          ticks: "outside",
+        },
+        hoverinfo: "text",
+        text: data.z.map((row, i) =>
+          row.map(
+            (val, j) =>
+              `Region: (${j}, ${i})<br>` +
+              `Response Time: ${val.toFixed(1)} min<br>` +
+              `${val > 20 ? "HIGH VARIABILITY" : ""}`
+          )
+        ),
+      };
+
+      // Layout configuration
+      const layout = {
+        title: "Westridge County Response Time Heat Map<br>Before Optimization",
+        annotations: annotations,
+        margin: { t: 80, r: 50, b: 50, l: 50 },
+        xaxis: {
+          title: "",
+          showgrid: false,
+          zeroline: false,
+          showticklabels: false,
+        },
+        yaxis: {
+          title: "",
+          showgrid: false,
+          zeroline: false,
+          showticklabels: false,
+        },
+        width: 800,
+        height: 500,
+        autosize: true,
+      };
+
+      // Create the plot
+      Plotly.newPlot("heatmap", [heatmap], layout, { responsive: true });
+
+      // Make the plot responsive
+      window.onresize = function () {
+        Plotly.relayout("heatmap", {
+          width: document.getElementById("heatmap").clientWidth,
+        });
+      };
+    </script>
+  </body>
+</html>

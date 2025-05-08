@@ -1,0 +1,1967 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Instructor Resources - Operational Excellence Course</title>
+    <style>
+      :root {
+        --primary: #2563eb;
+        --primary-dark: #1e40af;
+        --secondary: #0ea5e9;
+        --accent: #7c3aed;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --dark: #1e293b;
+        --light: #f8fafc;
+        --text: #334155;
+        --text-light: #64748b;
+        --border: #e2e8f0;
+        --shadow: rgba(0, 0, 0, 0.05);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--text);
+        background-color: var(--light);
+        line-height: 1.6;
+      }
+
+      a {
+        color: var(--primary);
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      a:hover {
+        color: var(--primary-dark);
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      header {
+        background-color: white;
+        box-shadow: 0 2px 10px var(--shadow);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 0;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .logo-icon {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        background-color: var(--primary);
+        color: white;
+        font-weight: bold;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+      }
+
+      .nav-link {
+        font-weight: 500;
+        transition: all 0.3s ease;
+        position: relative;
+        padding: 0.5rem 0;
+      }
+
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: var(--primary);
+        transition: width 0.3s ease;
+      }
+
+      .nav-link:hover::after,
+      .nav-link.active::after {
+        width: 100%;
+      }
+
+      .nav-link.active {
+        color: var(--primary-dark);
+        font-weight: 600;
+      }
+
+      .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--dark);
+      }
+
+      main {
+        min-height: calc(100vh - 136px);
+        padding: 2rem 0;
+      }
+
+      .resource-header {
+        background: linear-gradient(135deg, var(--accent), #a78bfa);
+        padding: 3rem 0;
+        margin-bottom: 2rem;
+        color: white;
+        border-radius: 16px;
+      }
+
+      .resource-header-content {
+        padding: 0 2rem;
+      }
+
+      .resource-title {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .resource-subtitle {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        max-width: 800px;
+      }
+
+      .resource-meta {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+      }
+
+      .resource-meta-item {
+        background-color: rgba(255, 255, 255, 0.2);
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .resource-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px var(--shadow);
+        margin-bottom: 2rem;
+      }
+
+      .resource-section {
+        margin-bottom: 2rem;
+      }
+
+      .resource-section-title {
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+        color: var(--dark);
+        border-bottom: 2px solid var(--border);
+        padding-bottom: 0.5rem;
+      }
+
+      .resource-content h3 {
+        margin-top: 1.5rem;
+        margin-bottom: 0.75rem;
+        font-size: 1.4rem;
+        color: var(--accent);
+      }
+
+      .resource-content h4 {
+        margin-top: 1.2rem;
+        margin-bottom: 0.5rem;
+        font-size: 1.2rem;
+        color: var(--dark);
+      }
+
+      .resource-content p {
+        margin-bottom: 1rem;
+      }
+
+      .resource-content ul,
+      .resource-content ol {
+        margin-left: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .resource-content li {
+        margin-bottom: 0.5rem;
+      }
+
+      .resource-note {
+        background-color: #f0f9ff;
+        border-left: 4px solid var(--secondary);
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        border-radius: 0 8px 8px 0;
+      }
+
+      .resource-note h4 {
+        color: var(--secondary);
+        margin-bottom: 0.75rem;
+      }
+
+      .tab-container {
+        margin-bottom: 20px;
+      }
+
+      .tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid var(--border);
+        overflow-x: auto;
+        padding-bottom: 5px;
+      }
+
+      .tab {
+        padding: 10px 15px;
+        border-radius: 8px 8px 0 0;
+        background-color: #e2e8f0;
+        cursor: pointer;
+        border: 1px solid #cbd5e1;
+        border-bottom: none;
+        white-space: nowrap;
+      }
+
+      .tab.active {
+        background-color: var(--accent);
+        color: white;
+        font-weight: bold;
+      }
+
+      .tab-content {
+        display: none;
+        padding: 20px;
+        background-color: #f8fafc;
+        border-radius: 0 0 8px 8px;
+        border: 1px solid var(--border);
+        border-top: none;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      .resource-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        margin: 2rem 0;
+      }
+
+      .resource-card {
+        background-color: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px var(--shadow);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .resource-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .resource-card-img {
+        height: 160px;
+        overflow: hidden;
+      }
+
+      .resource-card-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
+
+      .resource-card:hover .resource-card-img img {
+        transform: scale(1.05);
+      }
+
+      .resource-card-content {
+        padding: 1.5rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .resource-card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--dark);
+      }
+
+      .resource-card-text {
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        flex-grow: 1;
+      }
+
+      .resource-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: auto;
+      }
+
+      .resource-card-meta {
+        font-size: 0.85rem;
+        color: var(--text-light);
+      }
+
+      .resource-card-btn {
+        padding: 0.5rem 1rem;
+        background-color: var(--primary);
+        color: white;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        transition: background-color 0.3s ease;
+      }
+
+      .resource-card-btn:hover {
+        background-color: var(--primary-dark);
+        color: white;
+      }
+
+      .download-section {
+        background-color: #f8fafc;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      .download-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+      }
+
+      .download-item {
+        background-color: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 4px var(--shadow);
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .download-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        background-color: #e0e7ff;
+        color: var(--accent);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+      }
+
+      .download-title {
+        font-weight: 600;
+        color: var(--dark);
+      }
+
+      .download-desc {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        flex-grow: 1;
+      }
+
+      .download-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background-color: #f1f5f9;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--dark);
+        transition: all 0.3s ease;
+      }
+
+      .download-btn:hover {
+        background-color: var(--accent);
+        color: white;
+      }
+
+      .faq-section {
+        margin-top: 3rem;
+      }
+
+      .faq-item {
+        margin-bottom: 1.5rem;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .faq-question {
+        padding: 1.25rem;
+        background-color: #f8fafc;
+        cursor: pointer;
+        font-weight: 600;
+        color: var(--dark);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .faq-icon {
+        font-size: 1.25rem;
+        transition: transform 0.3s ease;
+      }
+
+      .faq-item.active .faq-icon {
+        transform: rotate(180deg);
+      }
+
+      .faq-answer {
+        padding: 0 1.25rem;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease, padding 0.3s ease;
+      }
+
+      .faq-item.active .faq-answer {
+        padding: 1.25rem;
+        max-height: 500px;
+      }
+
+      .custom-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 1.5rem 0;
+      }
+
+      .custom-table th {
+        background-color: #f1f5f9;
+        color: var(--dark);
+        font-weight: 600;
+        text-align: left;
+        padding: 0.75rem 1rem;
+        border-bottom: 2px solid var(--border);
+      }
+
+      .custom-table td {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid #e5e7eb;
+        vertical-align: top;
+      }
+
+      .custom-table tr:nth-child(even) {
+        background-color: #fafafa;
+      }
+
+      .custom-table tr:hover {
+        background-color: #f1f5f9;
+      }
+
+      footer {
+        background-color: var(--dark);
+        color: white;
+        padding: 2rem 0;
+        margin-top: 3rem;
+      }
+
+      .footer-content {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 2rem;
+      }
+
+      .footer-col {
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .footer-col h3 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        position: relative;
+        padding-bottom: 0.5rem;
+      }
+
+      .footer-col h3::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 40px;
+        height: 2px;
+        background-color: var(--accent);
+      }
+
+      .footer-links {
+        list-style: none;
+      }
+
+      .footer-link {
+        margin-bottom: 0.5rem;
+      }
+
+      .footer-link a {
+        color: rgba(255, 255, 255, 0.7);
+        transition: color 0.3s ease;
+      }
+
+      .footer-link a:hover {
+        color: white;
+      }
+
+      .copyright {
+        text-align: center;
+        padding-top: 2rem;
+        margin-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      .contact-box {
+        background-color: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 4px 6px var(--shadow);
+        margin: 2rem 0;
+      }
+
+      .contact-methods {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+      }
+
+      .contact-method {
+        flex: 1;
+        min-width: 250px;
+        padding: 1.5rem;
+        background-color: #f8fafc;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .contact-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: #e0f2fe;
+        color: var(--secondary);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.25rem;
+        flex-shrink: 0;
+      }
+
+      .contact-info h4 {
+        margin: 0 0 0.25rem 0;
+        font-size: 1.1rem;
+      }
+
+      .contact-info p {
+        margin: 0;
+        color: var(--text-light);
+        font-size: 0.9rem;
+      }
+
+      @media (max-width: 768px) {
+        .navbar {
+          flex-direction: column;
+          padding: 1rem;
+        }
+
+        .nav-links {
+          margin-top: 1rem;
+          flex-direction: column;
+          gap: 1rem;
+          width: 100%;
+        }
+
+        .mobile-menu-btn {
+          display: block;
+          position: absolute;
+          top: 1rem;
+          right: 1rem;
+        }
+
+        .nav-links {
+          display: none;
+        }
+
+        .nav-links.show {
+          display: flex;
+        }
+
+        .resource-title {
+          font-size: 2rem;
+        }
+
+        .resource-content {
+          padding: 1.5rem;
+        }
+
+        .resource-header {
+          padding: 2rem 0;
+        }
+
+        .resource-header-content {
+          padding: 0 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <nav class="navbar">
+          <a
+            href="index.html"
+            class="logo"
+          >
+            <div class="logo-icon">OE</div>
+            <span>Operational Excellence</span>
+          </a>
+          <button class="mobile-menu-btn">≡</button>
+          <ul class="nav-links">
+            <li>
+              <a
+                href="index.html"
+                class="nav-link"
+                >Home</a
+              >
+            </li>
+            <li>
+              <a
+                href="manufacturing-case.html"
+                class="nav-link"
+                >Manufacturing</a
+              >
+            </li>
+            <li>
+              <a
+                href="finance-case.html"
+                class="nav-link"
+                >Finance</a
+              >
+            </li>
+            <li>
+              <a
+                href="government-case.html"
+                class="nav-link"
+                >Government</a
+              >
+            </li>
+            <li>
+              <a
+                href="gaussian-processes.html"
+                class="nav-link"
+                >Gaussian Processes</a
+              >
+            </li>
+            <li>
+              <a
+                href="instructor-resources.html"
+                class="nav-link active"
+                >Instructor Resources</a
+              >
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="container">
+        <div class="resource-header">
+          <div class="resource-header-content">
+            <h1 class="resource-title">
+              Instructor Resources and Implementation Guide
+            </h1>
+            <p class="resource-subtitle">
+              Tools and strategies for teaching the Operational Excellence
+              Through Bayesian Optimization course
+            </p>
+            <div class="resource-meta">
+              <span class="resource-meta-item">👨‍🏫 Teaching Materials</span>
+              <span class="resource-meta-item">📝 Assessment Guides</span>
+              <span class="resource-meta-item"
+                >🧩 Implementation Strategies</span
+              >
+              <span class="resource-meta-item">📚 Supplementary Resources</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-container">
+          <div class="tabs">
+            <div
+              class="tab active"
+              data-tab="overview"
+            >
+              Course Overview
+            </div>
+            <div
+              class="tab"
+              data-tab="teaching"
+            >
+              Teaching Guide
+            </div>
+            <div
+              class="tab"
+              data-tab="assessment"
+            >
+              Assessment
+            </div>
+            <div
+              class="tab"
+              data-tab="materials"
+            >
+              Downloadable Materials
+            </div>
+            <div
+              class="tab"
+              data-tab="faq"
+            >
+              FAQ
+            </div>
+          </div>
+
+          <div
+            class="tab-content active"
+            data-tab-content="overview"
+          >
+            <div class="resource-content">
+              <div class="resource-section">
+                <h2 class="resource-section-title">Course Overview</h2>
+                <p>
+                  <strong>Title:</strong> Operational Excellence Through
+                  Bayesian Optimization<br />
+                  <strong>Duration:</strong> 3 weeks (6 sessions, 3 hours
+                  each)<br />
+                  <strong>Level:</strong> Advanced undergraduate or graduate<br />
+                  <strong>Prerequisites:</strong> Basic statistics, introduction
+                  to operations management
+                </p>
+
+                <p>
+                  This course integrates advanced statistical methods with
+                  practical operational excellence frameworks. The core premise
+                  is that many real-world processes contain inherent randomness
+                  that cannot be eliminated through traditional control methods,
+                  and that operational excellence requires explicitly modeling
+                  and managing this randomness.
+                </p>
+              </div>
+
+              <div class="resource-section">
+                <h2 class="resource-section-title">Learning Objectives</h2>
+                <p>By the end of this course, students should be able to:</p>
+                <ol>
+                  <li>
+                    Explain the limitations of deterministic approaches to
+                    operational excellence
+                  </li>
+                  <li>
+                    Describe the mathematical foundations of Gaussian Processes
+                    and Bayesian optimization
+                  </li>
+                  <li>
+                    Apply these concepts to real-world operational challenges
+                    across different sectors
+                  </li>
+                  <li>
+                    Use interactive tools to visualize and communicate complex
+                    stochastic relationships
+                  </li>
+                  <li>
+                    Develop optimization strategies that balance expected
+                    outcomes and variability
+                  </li>
+                  <li>
+                    Design implementation plans that account for organizational
+                    and human factors
+                  </li>
+                </ol>
+              </div>
+
+              <div class="resource-section">
+                <h2 class="resource-section-title">Teaching Approach</h2>
+                <p>
+                  This course uses a case-based teaching methodology, where
+                  students:
+                </p>
+                <ol>
+                  <li>First encounter a real-world operational challenge</li>
+                  <li>Explore the underlying mathematical concepts</li>
+                  <li>
+                    Apply these concepts using interactive visualization tools
+                  </li>
+                  <li>Develop and present solutions</li>
+                  <li>
+                    Reflect on implementation challenges and broader
+                    implications
+                  </li>
+                </ol>
+              </div>
+
+              <div class="resource-section">
+                <h2 class="resource-section-title">Week-by-Week Schedule</h2>
+
+                <h3>Week 1: Foundations</h3>
+
+                <h4>Session 1: Introduction to Randomness in Operations</h4>
+                <ul>
+                  <li>
+                    Traditional approaches to operational excellence and their
+                    limitations
+                  </li>
+                  <li>Types of randomness in operational systems</li>
+                  <li>Introduction to probabilistic thinking</li>
+                  <li>
+                    Hands-on activity: Identifying random processes in familiar
+                    systems
+                  </li>
+                </ul>
+
+                <h4>Session 2: Gaussian Processes and Bayesian Optimization</h4>
+                <ul>
+                  <li>Mathematical foundations</li>
+                  <li>Mean and covariance functions</li>
+                  <li>Input-dependent uncertainty</li>
+                  <li>Exploration vs. exploitation trade-offs</li>
+                  <li>Interactive visualization tool introduction</li>
+                </ul>
+
+                <h3>Week 2: Case Studies</h3>
+
+                <h4>
+                  Session 3: Manufacturing Excellence (PrecisionTech Case)
+                </h4>
+                <ul>
+                  <li>Detailed case discussion</li>
+                  <li>Application of GP model to manufacturing</li>
+                  <li>Quality vs. variability trade-offs</li>
+                  <li>Implementation challenges in production environments</li>
+                  <li>
+                    Group exercise: Developing solutions for PrecisionTech
+                  </li>
+                </ul>
+
+                <h4>
+                  Session 4: Financial Operations (Apex Investment Partners
+                  Case)
+                </h4>
+                <ul>
+                  <li>Detailed case discussion</li>
+                  <li>Application of GP model to portfolio management</li>
+                  <li>Risk-return optimization under market uncertainty</li>
+                  <li>Group exercise: Developing solutions for Apex</li>
+                </ul>
+
+                <h4>
+                  Session 5: Public Service Operations (Westridge County Case)
+                </h4>
+                <ul>
+                  <li>Detailed case discussion</li>
+                  <li>Application of GP model to emergency services</li>
+                  <li>Equity vs. efficiency considerations</li>
+                  <li>
+                    Group exercise: Developing solutions for Westridge County
+                  </li>
+                </ul>
+
+                <h3>Week 3: Implementation and Synthesis</h3>
+
+                <h4>Session 6: Implementation and Organizational Challenges</h4>
+                <ul>
+                  <li>Technical implementation considerations</li>
+                  <li>Change management and stakeholder communication</li>
+                  <li>Ethical dimensions of algorithmic decision-making</li>
+                  <li>Student presentations of group projects</li>
+                  <li>Course synthesis and future directions</li>
+                </ul>
+              </div>
+
+              <div class="resource-section">
+                <h2 class="resource-section-title">Assessment Structure</h2>
+
+                <h3>1. Individual Assignments (30%)</h3>
+                <ul>
+                  <li>
+                    Weekly reflection papers on concepts and their applications
+                  </li>
+                  <li>
+                    Interactive visualization exercises with written analysis
+                  </li>
+                </ul>
+
+                <h3>2. Group Case Analysis (40%)</h3>
+                <ul>
+                  <li>
+                    Teams of 3-4 students are assigned to one of the three cases
+                  </li>
+                  <li>
+                    Written analysis (10-15 pages) applying Bayesian
+                    optimization concepts
+                  </li>
+                  <li>Development of an implementation plan</li>
+                  <li>In-class presentation (15 minutes + Q&A)</li>
+                </ul>
+
+                <h3>3. Final Exam (30%)</h3>
+                <ul>
+                  <li>
+                    Scenario-based exam requiring application of course concepts
+                  </li>
+                  <li>
+                    Both technical understanding and practical application
+                  </li>
+                  <li>
+                    Includes visualization interpretation and recommendation
+                    development
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="tab-content"
+            data-tab-content="teaching"
+          >
+            <div class="resource-content">
+              <div class="resource-section">
+                <h2 class="resource-section-title">
+                  Implementation Tips for Instructors
+                </h2>
+
+                <h3>Teaching the Technical Content</h3>
+                <ol>
+                  <li>
+                    <strong>Start with intuition</strong>: Begin with intuitive
+                    explanations before introducing mathematical details.
+                  </li>
+                  <li>
+                    <strong>Use the visualization tool extensively</strong>: The
+                    interactive tool helps students develop intuition about
+                    complex statistical concepts.
+                  </li>
+                  <li>
+                    <strong>Incremental complexity</strong>: Start with simple
+                    examples before introducing the full complexity of the case
+                    studies.
+                  </li>
+                  <li>
+                    <strong>Connect to prior knowledge</strong>: Relate new
+                    concepts to familiar statistical ideas like confidence
+                    intervals and regression.
+                  </li>
+                  <li>
+                    <strong>Hands-on exercises</strong>: Have students
+                    experiment with the tool in small groups during class.
+                  </li>
+                </ol>
+
+                <div class="resource-note">
+                  <h4>Tip for Teaching Non-Technical Students</h4>
+                  <p>
+                    For students with limited mathematical background, focus on
+                    the visual interpretation of Gaussian Processes rather than
+                    the underlying equations. The interactive tool allows
+                    students to develop intuition without needing to understand
+                    all the mathematical details immediately.
+                  </p>
+                </div>
+              </div>
+
+              <div class="resource-section">
+                <h2 class="resource-section-title">Case Study Discussions</h2>
+                <ol>
+                  <li>
+                    <strong>Staged revelation</strong>: Consider revealing the
+                    case details in stages, allowing students to propose
+                    solutions before showing what was actually done.
+                  </li>
+                  <li>
+                    <strong>Role-playing</strong>: Assign different stakeholder
+                    perspectives to student groups during discussions.
+                  </li>
+                  <li>
+                    <strong>Technical/managerial balance</strong>: Ensure
+                    discussions cover both technical aspects and managerial
+                    implications.
+                  </li>
+                  <li>
+                    <strong>Guest speakers</strong>: If possible, invite
+                    practitioners from relevant industries to join discussions.
+                  </li>
+                  <li>
+                    <strong>Supplemental readings</strong>: Provide
+                    industry-specific articles that complement the cases.
+                  </li>
+                </ol>
+              </div>
+
+              <div class="resource-section">
+                <h2 class="resource-section-title">Group Project Guidance</h2>
+                <ol>
+                  <li>
+                    <strong>Structured check-ins</strong>: Schedule brief team
+                    meetings with the instructor to monitor progress.
+                  </li>
+                  <li>
+                    <strong>Template documents</strong>: Provide templates for
+                    analysis and implementation plans.
+                  </li>
+                  <li>
+                    <strong>Peer evaluation</strong>: Include a peer evaluation
+                    component in the group grade.
+                  </li>
+                  <li>
+                    <strong>Presentation guidance</strong>: Offer clear
+                    guidelines on expected presentation content and evaluation
+                    criteria.
+                  </li>
+                  <li>
+                    <strong>Interdisciplinary teams</strong>: If possible, form
+                    teams with students from different academic backgrounds.
+                  </li>
+                </ol>
+              </div>
+
+              <div class="resource-section">
+                <h2 class="resource-section-title">
+                  Using the Interactive Tool
+                </h2>
+                <p>
+                  The Bayesian optimization visualization tool is a central
+                  component of this course. Here are tips for using it
+                  effectively:
+                </p>
+                <ol>
+                  <li>
+                    <strong>Guided exploration</strong>: Start with
+                    instructor-led demonstrations before independent
+                    exploration.
+                  </li>
+                  <li>
+                    <strong>Specific tasks</strong>: Provide structured tasks
+                    for students to complete using the tool.
+                  </li>
+                  <li>
+                    <strong>Insight documentation</strong>: Have students
+                    document insights they gain through exploration.
+                  </li>
+                  <li>
+                    <strong>Parameter changes</strong>: Encourage
+                    experimentation with different parameter settings.
+                  </li>
+                  <li>
+                    <strong>Real-world connections</strong>: Continually connect
+                    visualization behaviors to real-world scenarios.
+                  </li>
+                </ol>
+
+                <div class="resource-note">
+                  <h4>Sample Exploration Task</h4>
+                  <p>
+                    Ask students to find regions in the parameter space where
+                    the variance is minimized but the mean is not optimal. Then
+                    have them discuss the implications for decision-making in
+                    their chosen case study context.
+                  </p>
+                </div>
+              </div>
+
+              <div class="resource-section">
+                <h2 class="resource-section-title">
+                  Adapting for Different Audiences
+                </h2>
+
+                <h3>For Technical Audiences (Engineering, Computer Science)</h3>
+                <ul>
+                  <li>Expand the mathematical foundations</li>
+                  <li>
+                    Include coding exercises to implement basic Gaussian
+                    Processes
+                  </li>
+                  <li>Add technical appendices to the cases</li>
+                </ul>
+
+                <h3>For Business Audiences (MBA, Management)</h3>
+                <ul>
+                  <li>
+                    Emphasize organizational and implementation challenges
+                  </li>
+                  <li>Provide more industry context around cases</li>
+                  <li>
+                    Focus on decision-making implications rather than
+                    mathematical details
+                  </li>
+                </ul>
+
+                <h3>For Public Policy Audiences</h3>
+                <ul>
+                  <li>Expand on equity considerations</li>
+                  <li>Include additional public sector examples</li>
+                  <li>
+                    Discuss policy implications of algorithmic decision-making
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="tab-content"
+            data-tab-content="assessment"
+          >
+            <div class="resource-content">
+              <div class="resource-section">
+                <h2 class="resource-section-title">Assessment Resources</h2>
+                <p>
+                  This section provides detailed guidance on assessing student
+                  learning in the course.
+                </p>
+
+                <h3>Weekly Reflection Papers</h3>
+                <p>
+                  Weekly reflection papers ask students to connect course
+                  concepts to their own experiences or to current events. Each
+                  reflection paper should be 2-3 pages and include:
+                </p>
+                <ol>
+                  <li>Summary of key concepts from the week's sessions</li>
+                  <li>Application of these concepts to a specific context</li>
+                  <li>
+                    Reflections on limitations or challenges in applying these
+                    concepts
+                  </li>
+                  <li>Questions or areas for further exploration</li>
+                </ol>
+
+                <table class="custom-table">
+                  <thead>
+                    <tr>
+                      <th>Criterion</th>
+                      <th>Excellent (90-100%)</th>
+                      <th>Good (80-89%)</th>
+                      <th>Needs Improvement (70-79%)</th>
+                      <th>Unsatisfactory (&lt;70%)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Concept Understanding (40%)</td>
+                      <td>
+                        Demonstrates deep understanding of course concepts with
+                        nuanced explanations
+                      </td>
+                      <td>Shows solid understanding of key concepts</td>
+                      <td>Basic understanding with some misconceptions</td>
+                      <td>Significant misconceptions or errors</td>
+                    </tr>
+                    <tr>
+                      <td>Application (30%)</td>
+                      <td>
+                        Creative and insightful application to novel contexts
+                      </td>
+                      <td>Appropriate application to relevant contexts</td>
+                      <td>Limited or superficial application</td>
+                      <td>Fails to apply concepts appropriately</td>
+                    </tr>
+                    <tr>
+                      <td>Critical Thinking (20%)</td>
+                      <td>Thoughtful analysis of limitations and challenges</td>
+                      <td>Some analysis of limitations</td>
+                      <td>Minimal consideration of limitations</td>
+                      <td>No critical analysis</td>
+                    </tr>
+                    <tr>
+                      <td>Communication (10%)</td>
+                      <td>Clear, concise, and well-organized writing</td>
+                      <td>Generally clear writing with minor issues</td>
+                      <td>Some clarity issues affect understanding</td>
+                      <td>
+                        Unclear writing significantly impedes understanding
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="resource-section">
+                <h2 class="resource-section-title">Group Case Analysis</h2>
+                <p>
+                  The group case analysis is a comprehensive project where teams
+                  apply course concepts to one of the three case studies. The
+                  deliverables include:
+                </p>
+
+                <h3>Written Analysis (60% of project grade)</h3>
+                <p>A 10-15 page report that includes:</p>
+                <ol>
+                  <li>Executive summary</li>
+                  <li>Case overview and key challenges</li>
+                  <li>Application of Bayesian optimization framework</li>
+                  <li>Development of specific recommendations</li>
+                  <li>
+                    Implementation plan addressing both technical and
+                    organizational aspects
+                  </li>
+                  <li>Evaluation metrics and expected outcomes</li>
+                </ol>
+
+                <h3>Presentation (30% of project grade)</h3>
+                <p>
+                  A 15-minute presentation followed by Q&A that effectively
+                  communicates:
+                </p>
+                <ol>
+                  <li>Key insights from the analysis</li>
+                  <li>Visual demonstration using the interactive tool</li>
+                  <li>Recommendations and implementation strategy</li>
+                  <li>Response to questions from instructor and peers</li>
+                </ol>
+
+                <h3>Peer Evaluation (10% of project grade)</h3>
+                <p>
+                  Each team member evaluates the contributions of their
+                  teammates based on:
+                </p>
+                <ol>
+                  <li>Quality of contributions</li>
+                  <li>Timeliness and reliability</li>
+                  <li>Collaboration and communication</li>
+                  <li>Problem-solving and initiative</li>
+                </ol>
+              </div>
+
+              <div class="resource-section">
+                <h2 class="resource-section-title">Final Exam</h2>
+                <p>
+                  The final exam is scenario-based and requires students to
+                  apply course concepts to a new situation. The exam includes:
+                </p>
+
+                <h3>Part 1: Scenario Analysis (50%)</h3>
+                <p>
+                  Students are presented with a detailed scenario from a new
+                  industry not covered in the case studies. They must:
+                </p>
+                <ol>
+                  <li>Identify key variables and uncertainties</li>
+                  <li>Develop a Bayesian optimization framework</li>
+                  <li>Propose specific recommendations</li>
+                  <li>Address implementation challenges</li>
+                </ol>
+
+                <h3>Part 2: Visualization Interpretation (30%)</h3>
+                <p>
+                  Students are given output from the interactive visualization
+                  tool and must:
+                </p>
+                <ol>
+                  <li>Interpret the mean and variance functions</li>
+                  <li>Identify optimal regions in the parameter space</li>
+                  <li>
+                    Explain trade-offs between different parameter settings
+                  </li>
+                  <li>Make recommendations based on the visualization</li>
+                </ol>
+
+                <h3>Part 3: Short Answer Questions (20%)</h3>
+                <p>5-7 questions covering:</p>
+                <ol>
+                  <li>Technical concepts from Gaussian Processes</li>
+                  <li>Operational excellence principles</li>
+                  <li>Ethical considerations in algorithmic decision-making</li>
+                  <li>Change management and implementation strategies</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="tab-content"
+            data-tab-content="materials"
+          >
+            <h3 style="margin-bottom: 1rem">Downloadable Course Materials</h3>
+            <p>
+              The following resources are available for instructors teaching
+              this course. All materials are provided in editable formats to
+              allow customization for your specific teaching context.
+            </p>
+
+            <div class="download-section">
+              <h3>Lecture Materials</h3>
+              <div class="download-grid">
+                <div class="download-item">
+                  <div class="download-icon">📊</div>
+                  <h4 class="download-title">Slide Decks</h4>
+                  <p class="download-desc">
+                    Complete presentation slides for all six sessions, including
+                    speaker notes and discussion prompts.
+                  </p>
+                  <a
+                    href="#"
+                    class="download-btn"
+                    >Download (PowerPoint)</a
+                  >
+                </div>
+
+                <div class="download-item">
+                  <div class="download-icon">🎥</div>
+                  <h4 class="download-title">Concept Videos</h4>
+                  <p class="download-desc">
+                    Short videos explaining key concepts that can be shared with
+                    students before class.
+                  </p>
+                  <a
+                    href="#"
+                    class="download-btn"
+                    >Download (MP4)</a
+                  >
+                </div>
+
+                <div class="download-item">
+                  <div class="download-icon">📝</div>
+                  <h4 class="download-title">Lecture Notes</h4>
+                  <p class="download-desc">
+                    Detailed notes covering each session, including explanations
+                    of complex concepts and teaching tips.
+                  </p>
+                  <a
+                    href="#"
+                    class="download-btn"
+                    >Download (PDF)</a
+                  >
+                </div>
+
+                <div class="download-item">
+                  <div class="download-icon">🧮</div>
+                  <h4 class="download-title">Mathematical Appendix</h4>
+                  <p class="download-desc">
+                    Detailed derivations and explanations of the mathematical
+                    concepts for technically advanced students.
+                  </p>
+                  <a
+                    href="#"
+                    class="download-btn"
+                    >Download (PDF)</a
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="download-section">
+              <h3>Case Study Resources</h3>
+              <div class="download-grid">
+                <div class="download-item">
+                  <div class="download-icon">📂</div>
+                  <h4 class="download-title">Case Teaching Notes</h4>
+                  <p class="download-desc">
+                    Instructor guides for teaching each case, including
+                    background information and discussion suggestions.
+                  </p>
+                  <a
+                    href="#"
+                    class="download-btn"
+                    >Download (Word)</a
+                  >
+                </div>
+
+                <div class="download-item">
+                  <div class="download-icon">💼</div>
+                  <h4 class="download-title">Extended Case Materials</h4>
+                  <p class="download-desc">
+                    Additional data and background information for each case
+                    that can be revealed during discussions.
+                  </p>
+                  <a
+                    href="#"
+                    class="download-btn"
+                    >Download (ZIP)</a
+                  >
+                </div>
+
+                <div class="download-item">
+                  <div class="download-icon">🎭</div>
+                  <h4 class="download-title">Role Play Cards</h4>
+                  <p class="download-desc">
+                    Role descriptions for stakeholders in each case for use in
+                    simulation exercises.
+                  </p>
+                  <a
+                    href="#"
+                    class="download-btn"
+                    >Download (PDF)</a
+                  >
+                </div>
+
+                <div class="download-item">
+                  <div class="download-icon">📄</div>
+                  <h4 class="download-title">Case Analysis Template</h4>
+                  <p class="download-desc">
+                    Template for students to use when analyzing cases and
+                    preparing their group projects.
+                  </p>
+                  <a
+                    href="#"
+                    class="download-btn"
+                    >Download (Word)</a
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="download-section">
+              <h3>Assessment Materials</h3>
+              <div class="download-grid">
+                <div class="download-item">
+                  <div class="download-icon">✅</div>
+                  <h4 class="download-title">Rubrics</h4>
+                  <p class="download-desc">
+                    Detailed grading rubrics for all assignments and the final
+                    exam.
+                  </p>
+                  <a
+                    href="#"
+                    class="download-btn"
+                    >Download (Excel)</a
+                  >
+                </div>
+
+                <div class="download-item">
+                  <div class="download-icon">📝</div>
+                  <h4 class="download-title">Sample Assignments</h4>
+                  <p class="download-desc">
+                    Example reflection papers and case analyses with grading
+                    commentary.
+                  </p>
+                  <a
+                    href="#"
+                    class="download-btn"
+                    >Download (PDF)</a
+                  >
+                </div>
+
+                <div class="download-item">
+                  <div class="download-icon">📋</div>
+                  <h4 class="download-title">Peer Evaluation Forms</h4>
+                  <p class="download-desc">
+                    Forms for students to evaluate their teammates'
+                    contributions to group projects.
+                  </p>
+                  <a
+                    href="#"
+                    class="download-btn"
+                    >Download (Word)</a
+                  >
+                </div>
+
+                <div class="download-item">
+                  <div class="download-icon">📊</div>
+                  <h4 class="download-title">Sample Exam</h4>
+                  <p class="download-desc">
+                    Example final exam with model answers and grading
+                    guidelines.
+                  </p>
+                  <a
+                    href="#"
+                    class="download-btn"
+                    >Download (PDF)</a
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="download-section">
+              <h3>Interactive Tool Resources</h3>
+              <div class="download-grid">
+                <div class="download-item">
+                  <div class="download-icon">🖥️</div>
+                  <h4 class="download-title">Tool Source Code</h4>
+                  <p class="download-desc">
+                    Complete source code for the Bayesian optimization
+                    visualization tool for customization.
+                  </p>
+                  <a
+                    href="#"
+                    class="download-btn"
+                    >Download (ZIP)</a
+                  >
+                </div>
+
+                <div class="download-item">
+                  <div class="download-icon">📋</div>
+                  <h4 class="download-title">Tool Exercises</h4>
+                  <p class="download-desc">
+                    Structured exercises for students to complete using the
+                    interactive tool.
+                  </p>
+                  <a
+                    href="#"
+                    class="download-btn"
+                    >Download (PDF)</a
+                  >
+                </div>
+
+                <div class="download-item">
+                  <div class="download-icon">📹</div>
+                  <h4 class="download-title">Tool Tutorial Videos</h4>
+                  <p class="download-desc">
+                    Step-by-step tutorial videos showing how to use the tool
+                    effectively.
+                  </p>
+                  <a
+                    href="#"
+                    class="download-btn"
+                    >Download (MP4)</a
+                  >
+                </div>
+
+                <div class="download-item">
+                  <div class="download-icon">🧩</div>
+                  <h4 class="download-title">Extension Modules</h4>
+                  <p class="download-desc">
+                    Additional modules that can be added to the tool for more
+                    advanced exploration.
+                  </p>
+                  <a
+                    href="#"
+                    class="download-btn"
+                    >Download (ZIP)</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="tab-content"
+            data-tab-content="faq"
+          >
+            <h3 style="margin-bottom: 1rem">Frequently Asked Questions</h3>
+
+            <div class="faq-section">
+              <div class="faq-item">
+                <div class="faq-question">
+                  <span>How much statistical background do students need?</span>
+                  <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                  <p>
+                    Basic understanding of probability, confidence intervals,
+                    and regression is sufficient. The course is designed to
+                    build intuition through visualization rather than requiring
+                    advanced statistical knowledge. For students with limited
+                    statistical background, consider providing supplementary
+                    materials on probability distributions and regression before
+                    starting the course.
+                  </p>
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <div class="faq-question">
+                  <span
+                    >Can the course be taught without coding components?</span
+                  >
+                  <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                  <p>
+                    Yes. The interactive visualization tool eliminates the need
+                    for students to implement models themselves. For more
+                    technical audiences, optional coding exercises can be added
+                    using the provided Python notebooks. However, the core
+                    learning objectives can be achieved without any coding by
+                    focusing on the conceptual understanding and application of
+                    Bayesian optimization principles.
+                  </p>
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <div class="faq-question">
+                  <span
+                    >How should the cases be allocated among student
+                    groups?</span
+                  >
+                  <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                  <p>
+                    You can either assign cases randomly, allow students to
+                    select based on interest, or deliberately create diversity
+                    by assigning students to cases outside their primary domain
+                    expertise. Each approach has advantages:
+                  </p>
+                  <ul>
+                    <li>
+                      <strong>Random assignment</strong>: Ensures even
+                      distribution and pushes students outside their comfort
+                      zone
+                    </li>
+                    <li>
+                      <strong>Self-selection</strong>: Increases engagement but
+                      may lead to uneven distribution
+                    </li>
+                    <li>
+                      <strong>Deliberate diversity</strong>: Creates valuable
+                      cross-domain learning but requires knowing students'
+                      backgrounds
+                    </li>
+                  </ul>
+                  <p>
+                    Consider your specific learning objectives and class
+                    composition when deciding which approach to use.
+                  </p>
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <div class="faq-question">
+                  <span
+                    >How can discussion be balanced between technical and
+                    managerial aspects?</span
+                  >
+                  <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                  <p>
+                    Use structured discussion sessions with specific time
+                    allocations for different aspects. Also, consider assigning
+                    different students as technical vs. managerial leads for
+                    different discussions. Another effective approach is to use
+                    a "technical deep dive" followed by a "managerial
+                    implications" structure for each topic.
+                  </p>
+                  <p>
+                    The case studies are designed to naturally integrate both
+                    aspects, but it's important to ensure that discussions don't
+                    get stuck in either purely technical details or high-level
+                    management considerations.
+                  </p>
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <div class="faq-question">
+                  <span
+                    >How should guest speakers be integrated into the
+                    course?</span
+                  >
+                  <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                  <p>
+                    Guest speakers are most effective when they can connect
+                    theoretical concepts to real-world applications. Provide
+                    them with course materials in advance and suggest specific
+                    connections to make. Consider using guest speakers in the
+                    following ways:
+                  </p>
+                  <ul>
+                    <li>Introduction of a case study from their industry</li>
+                    <li>Panel discussion on implementation challenges</li>
+                    <li>Q&A session following student presentations</li>
+                    <li>Workshop on a specific application area</li>
+                  </ul>
+                  <p>
+                    Brief the speakers on the students' background and the
+                    course's learning objectives to ensure their contributions
+                    align with your teaching goals.
+                  </p>
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <div class="faq-question">
+                  <span
+                    >How can I assess whether students truly understand the
+                    probabilistic nature of the models?</span
+                  >
+                  <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                  <p>
+                    Look for evidence that students recognize the implications
+                    of uncertainty in their analyses and recommendations.
+                    Specifically, assess whether they:
+                  </p>
+                  <ul>
+                    <li>
+                      Explicitly discuss trade-offs between expected outcomes
+                      and their variability
+                    </li>
+                    <li>
+                      Incorporate uncertainty into their decision-making process
+                    </li>
+                    <li>
+                      Consider multiple possible scenarios rather than
+                      single-point predictions
+                    </li>
+                    <li>
+                      Propose adaptive strategies that can respond to different
+                      outcomes
+                    </li>
+                    <li>
+                      Use appropriate probabilistic language when discussing
+                      results
+                    </li>
+                  </ul>
+                  <p>
+                    In presentations and exams, use unexpected scenarios to test
+                    whether students can apply probabilistic thinking to novel
+                    situations.
+                  </p>
+                </div>
+              </div>
+
+              <div class="faq-item">
+                <div class="faq-question">
+                  <span
+                    >How can I help students connect these abstract concepts to
+                    their own experiences?</span
+                  >
+                  <span class="faq-icon">▼</span>
+                </div>
+                <div class="faq-answer">
+                  <p>
+                    Start by asking students to identify examples of randomness
+                    and uncertainty in their daily lives or work experiences.
+                    Use these examples as anchors throughout the course.
+                    Additionally:
+                  </p>
+                  <ul>
+                    <li>
+                      Assign reflection exercises that explicitly ask students
+                      to connect course concepts to personal experiences
+                    </li>
+                    <li>
+                      Use simple, relatable examples (e.g., weather forecasting,
+                      sports performance) before introducing complex cases
+                    </li>
+                    <li>
+                      Encourage students to bring examples from their own work
+                      or internship experiences for class discussion
+                    </li>
+                    <li>
+                      Create small group activities where students share and
+                      analyze real-world examples from their different
+                      backgrounds
+                    </li>
+                  </ul>
+                  <p>
+                    These connections help make abstract concepts more concrete
+                    and memorable.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="contact-box">
+              <h3>Need Additional Support?</h3>
+              <p>
+                If you have questions not addressed in this FAQ or need
+                personalized assistance implementing the course, please contact
+                us:
+              </p>
+
+              <div class="contact-methods">
+                <div class="contact-method">
+                  <div class="contact-icon">📧</div>
+                  <div class="contact-info">
+                    <h4>Technical Support</h4>
+                    <p>support@operationalexcellence.edu</p>
+                  </div>
+                </div>
+
+                <div class="contact-method">
+                  <div class="contact-icon">❓</div>
+                  <div class="contact-info">
+                    <h4>Content Questions</h4>
+                    <p>content@operationalexcellence.edu</p>
+                  </div>
+                </div>
+
+                <div class="contact-method">
+                  <div class="contact-icon">🔄</div>
+                  <div class="contact-info">
+                    <h4>Implementation Guidance</h4>
+                    <p>implementation@operationalexcellence.edu</p>
+                  </div>
+                </div>
+              </div>
+
+              <p style="margin-top: 1.5rem; text-align: center">
+                We welcome feedback and suggestions for improving these
+                materials for future iterations.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-col">
+            <h3>About</h3>
+            <p>
+              This educational course brings together state-of-the-art
+              statistical methods with practical operational excellence
+              frameworks, helping organizations manage complexity and
+              randomness.
+            </p>
+          </div>
+
+          <div class="footer-col">
+            <h3>Quick Links</h3>
+            <ul class="footer-links">
+              <li class="footer-link"><a href="index.html">Home</a></li>
+              <li class="footer-link">
+                <a href="manufacturing-case.html">Manufacturing Case</a>
+              </li>
+              <li class="footer-link">
+                <a href="finance-case.html">Finance Case</a>
+              </li>
+              <li class="footer-link">
+                <a href="government-case.html">Government Case</a>
+              </li>
+              <li class="footer-link">
+                <a href="gaussian-processes.html">Gaussian Processes</a>
+              </li>
+              <li class="footer-link">
+                <a href="instructor-resources.html">Instructor Resources</a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h3>Resources</h3>
+            <ul class="footer-links">
+              <li class="footer-link"><a href="#">Lecture Slides</a></li>
+              <li class="footer-link"><a href="#">Assignment Templates</a></li>
+              <li class="footer-link"><a href="#">Grading Rubrics</a></li>
+              <li class="footer-link"><a href="#">Discussion Guides</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="copyright">
+          <p>&copy; 2025 Operational Excellence Course. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Mobile menu toggle
+      const mobileMenuBtn = document.querySelector(".mobile-menu-btn");
+      const navLinks = document.querySelector(".nav-links");
+
+      mobileMenuBtn.addEventListener("click", () => {
+        navLinks.classList.toggle("show");
+      });
+
+      // Active link highlighting
+      const currentPage = window.location.pathname.split("/").pop();
+      const navLinkElements = document.querySelectorAll(".nav-link");
+
+      navLinkElements.forEach((link) => {
+        const linkPage = link.getAttribute("href");
+        if (linkPage === currentPage) {
+          link.classList.add("active");
+        } else if (currentPage === "" && linkPage === "index.html") {
+          link.classList.add("active");
+        } else {
+          link.classList.remove("active");
+        }
+      });
+
+      // Tab functionality
+      const tabs = document.querySelectorAll(".tab");
+      const tabContents = document.querySelectorAll(".tab-content");
+
+      if (tabs.length > 0 && tabContents.length > 0) {
+        tabs.forEach((tab) => {
+          tab.addEventListener("click", () => {
+            tabs.forEach((t) => t.classList.remove("active"));
+            tabContents.forEach((tc) => tc.classList.remove("active"));
+
+            tab.classList.add("active");
+            const activeTab = tab.getAttribute("data-tab");
+            document
+              .querySelector(`[data-tab-content="${activeTab}"]`)
+              .classList.add("active");
+          });
+        });
+      }
+
+      // FAQ functionality
+      const faqItems = document.querySelectorAll(".faq-item");
+
+      if (faqItems.length > 0) {
+        faqItems.forEach((item) => {
+          const question = item.querySelector(".faq-question");
+
+          question.addEventListener("click", () => {
+            item.classList.toggle("active");
+          });
+        });
+      }
+    </script>
+  </body>
+</html>

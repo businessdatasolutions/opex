@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Westridge County Emergency Services Case Study</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+      :root {
+        --primary: #2563eb;
+        --primary-dark: #1e40af;
+        --secondary: #0ea5e9;
+        --accent: #f59e0b;
+        --success: #10b981;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+        --dark: #1e293b;
+        --light: #f8fafc;
+        --text: #334155;
+        --text-light: #64748b;
+        --border: #e2e8f0;
+        --shadow: rgba(0, 0, 0, 0.05);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        color: var(--text);
+        background-color: var(--light);
+        line-height: 1.6;
+      }
+
+      a {
+        color: var(--primary);
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      a:hover {
+        color: var(--primary-dark);
+      }
+
+      .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      header {
+        background-color: white;
+        box-shadow: 0 2px 10px var(--shadow);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 0;
+      }
+
+      .logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .logo-icon {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        background-color: var(--primary);
+        color: white;
+        font-weight: bold;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 2rem;
+        list-style: none;
+      }
+
+      .nav-link {
+        font-weight: 500;
+        transition: all 0.3s ease;
+        position: relative;
+        padding: 0.5rem 0;
+      }
+
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background-color: var(--primary);
+        transition: width 0.3s ease;
+      }
+
+      .nav-link:hover::after,
+      .nav-link.active::after {
+        width: 100%;
+      }
+
+      .nav-link.active {
+        color: var(--primary-dark);
+        font-weight: 600;
+      }
+
+      .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--dark);
+      }
+
+      main {
+        min-height: calc(100vh - 136px);
+        padding: 2rem 0;
+      }
+
+      .case-header {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+        padding: 3rem 0;
+        margin-bottom: 2rem;
+        color: white;
+        border-radius: 16px;
+      }
+
+      .case-header-content {
+        padding: 0 2rem;
+      }
+
+      .case-title {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .case-subtitle {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        max-width: 800px;
+      }
+
+      .case-meta {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+      }
+
+      .case-meta-item {
+        background-color: rgba(255, 255, 255, 0.2);
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .case-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 4px 6px var(--shadow);
+        margin-bottom: 2rem;
+      }
+
+      .case-section {
+        margin-bottom: 2rem;
+      }
+
+      .case-section-title {
+        font-size: 1.8rem;
+        margin-bottom: 1rem;
+        color: var(--dark);
+        border-bottom: 2px solid var(--border);
+        padding-bottom: 0.5rem;
+      }
+
+      .case-img {
+        width: 100%;
+        border-radius: 8px;
+        margin: 1.5rem 0;
+      }
+
+      .case-quote {
+        background-color: #fffbeb;
+        border-left: 4px solid var(--accent);
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        border-radius: 0 8px 8px 0;
+        font-style: italic;
+      }
+
+      .case-quote cite {
+        display: block;
+        margin-top: 0.5rem;
+        font-style: normal;
+        font-weight: 600;
+      }
+
+      .case-questions {
+        background-color: #f8fafc;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+      }
+
+      .case-questions h3 {
+        margin-bottom: 1rem;
+        color: var(--accent);
+      }
+
+      .case-questions ol {
+        padding-left: 1.5rem;
+      }
+
+      .case-questions li {
+        margin-bottom: 0.75rem;
+      }
+
+      .tool-container {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1rem;
+        margin: 2rem 0;
+        background-color: #f8fafc;
+      }
+
+      .tool-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .tool-title {
+        font-size: 1.3rem;
+        color: var(--dark);
+      }
+
+      .tool-actions {
+        display: flex;
+        gap: 1rem;
+      }
+
+      .action-btn {
+        background-color: var(--accent);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .action-btn:hover {
+        background-color: #d97706;
+      }
+
+      .tab-container {
+        margin-bottom: 20px;
+      }
+
+      .tabs {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid var(--border);
+        overflow-x: auto;
+        padding-bottom: 5px;
+      }
+
+      .tab {
+        padding: 10px 15px;
+        border-radius: 8px 8px 0 0;
+        background-color: #e2e8f0;
+        cursor: pointer;
+        border: 1px solid #cbd5e1;
+        border-bottom: none;
+        white-space: nowrap;
+      }
+
+      .tab.active {
+        background-color: var(--accent);
+        color: white;
+        font-weight: bold;
+      }
+
+      .tab-content {
+        display: none;
+        padding: 20px;
+        background-color: #f8fafc;
+        border-radius: 0 0 8px 8px;
+        border: 1px solid var(--border);
+        border-top: none;
+      }
+
+      .tab-content.active {
+        display: block;
+      }
+
+      .tool-frame {
+        width: 100%;
+        height: 800px;
+        border: none;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      .case-summary {
+        background-color: #fffbeb;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        border-left: 4px solid var(--accent);
+      }
+
+      .case-summary h3 {
+        color: var(--accent);
+        margin-bottom: 0.75rem;
+      }
+
+      .key-points {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin: 2rem 0;
+      }
+
+      .key-point {
+        flex: 1;
+        min-width: 250px;
+        background-color: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 4px var(--shadow);
+        border-top: 3px solid var(--accent);
+      }
+
+      .key-point-title {
+        font-weight: 600;
+        font-size: 1.1rem;
+        margin-bottom: 0.75rem;
+        color: #d97706;
+      }
+
+      .implementation-steps {
+        background-color: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        box-shadow: 0 2px 4px var(--shadow);
+      }
+
+      .step {
+        display: flex;
+        margin-bottom: 1.5rem;
+        position: relative;
+      }
+
+      .step:last-child {
+        margin-bottom: 0;
+      }
+
+      .step-number {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: var(--accent);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        flex-shrink: 0;
+        margin-right: 1rem;
+      }
+
+      .step-content {
+        padding-top: 0.5rem;
+      }
+
+      .step-title {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--dark);
+      }
+
+      .step:not(:last-child) .step-number::after {
+        content: "";
+        position: absolute;
+        top: 40px;
+        left: 20px;
+        width: 2px;
+        height: calc(100% - 40px);
+        background-color: var(--border);
+      }
+
+      .map-container {
+        background-color: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        box-shadow: 0 2px 4px var(--shadow);
+        text-align: center;
+      }
+
+      .map-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--dark);
+      }
+
+      footer {
+        background-color: var(--dark);
+        color: white;
+        padding: 2rem 0;
+        margin-top: 3rem;
+      }
+
+      .footer-content {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 2rem;
+      }
+
+      .footer-col {
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .footer-col h3 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        position: relative;
+        padding-bottom: 0.5rem;
+      }
+
+      .footer-col h3::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 40px;
+        height: 2px;
+        background-color: var(--accent);
+      }
+
+      .footer-links {
+        list-style: none;
+      }
+
+      .footer-link {
+        margin-bottom: 0.5rem;
+      }
+
+      .footer-link a {
+        color: rgba(255, 255, 255, 0.7);
+        transition: color 0.3s ease;
+      }
+
+      .footer-link a:hover {
+        color: white;
+      }
+
+      .copyright {
+        text-align: center;
+        padding-top: 2rem;
+        margin-top: 2rem;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.5);
+      }
+
+      .stats-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        margin: 2rem 0;
+      }
+
+      .stat-card {
+        flex: 1;
+        min-width: 200px;
+        background-color: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 4px var(--shadow);
+        text-align: center;
+      }
+
+      .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--accent);
+        margin-bottom: 0.5rem;
+      }
+
+      .stat-label {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      .chart-caption {
+        font-size: 0.9rem;
+        color: var(--text-light);
+        text-align: center;
+        margin-top: 0.5rem;
+        font-style: italic;
+      }
+
+      @media (max-width: 768px) {
+        .navbar {
+          flex-direction: column;
+          padding: 1rem;
+        }
+
+        .nav-links {
+          margin-top: 1rem;
+          flex-direction: column;
+          gap: 1rem;
+          width: 100%;
+        }
+
+        .mobile-menu-btn {
+          display: block;
+          position: absolute;
+          top: 1rem;
+          right: 1rem;
+        }
+
+        .nav-links {
+          display: none;
+        }
+
+        .nav-links.show {
+          display: flex;
+        }
+
+        .case-title {
+          font-size: 2rem;
+        }
+
+        .case-content {
+          padding: 1.5rem;
+        }
+
+        .case-header {
+          padding: 2rem 0;
+        }
+
+        .case-header-content {
+          padding: 0 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <nav class="navbar">
+          <a
+            href="index.html"
+            class="logo"
+          >
+            <div class="logo-icon">OE</div>
+            <span>Operational Excellence</span>
+          </a>
+          <button class="mobile-menu-btn">≡</button>
+          <ul class="nav-links">
+            <li>
+              <a
+                href="index.html"
+                class="nav-link"
+                >Home</a
+              >
+            </li>
+            <li>
+              <a
+                href="manufacturing-case.html"
+                class="nav-link"
+                >Manufacturing</a
+              >
+            </li>
+            <li>
+              <a
+                href="finance-case.html"
+                class="nav-link"
+                >Finance</a
+              >
+            </li>
+            <li>
+              <a
+                href="government-case.html"
+                class="nav-link active"
+                >Government</a
+              >
+            </li>
+            <li>
+              <a
+                href="gaussian-processes.html"
+                class="nav-link"
+                >Gaussian Processes</a
+              >
+            </li>
+            <li>
+              <a
+                href="instructor-resources.html"
+                class="nav-link"
+                >Instructor Resources</a
+              >
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="container">
+        <div class="case-header">
+          <div class="case-header-content">
+            <h1 class="case-title">
+              Westridge County: Optimizing Emergency Response in a Complex
+              Environment
+            </h1>
+            <p class="case-subtitle">
+              A Case Study on Operational Excellence in Local Government
+            </p>
+            <div class="case-meta">
+              <span class="case-meta-item">🏛️ Government</span>
+              <span class="case-meta-item">🚑 Emergency Services</span>
+              <span class="case-meta-item">🚒 Resource Allocation</span>
+              <span class="case-meta-item">📊 Public Service Optimization</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="case-summary">
+          <h3>Case Overview</h3>
+          <p>
+            Westridge County struggled with inconsistent emergency response
+            times despite significant investments in equipment and personnel.
+            This case explores how the county used Bayesian optimization to
+            model the inherent variability in emergency response systems,
+            ultimately improving both average response times and their
+            consistency across the diverse geographic region.
+          </p>
+        </div>
+
+        <div class="tab-container">
+          <div class="tabs">
+            <div
+              class="tab active"
+              data-tab="case-narrative"
+            >
+              Case Narrative
+            </div>
+            <div
+              class="tab"
+              data-tab="interactive-tool"
+            >
+              Interactive Tool
+            </div>
+            <div
+              class="tab"
+              data-tab="discussion-questions"
+            >
+              Discussion Questions
+            </div>
+            <div
+              class="tab"
+              data-tab="resources"
+            >
+              Additional Resources
+            </div>
+          </div>
+
+          <div
+            class="tab-content active"
+            data-tab-content="case-narrative"
+          >
+            <div class="case-content">
+              <div class="case-section">
+                <h2 class="case-section-title">Background</h2>
+                <p>
+                  Westridge County is a diverse geographic region spanning 1,200
+                  square miles with a population of approximately 450,000
+                  residents. The county includes urban centers, suburban
+                  developments, rural farmland, and remote wilderness areas. The
+                  Westridge Emergency Services Department (WESD) is responsible
+                  for coordinating emergency medical services, fire response,
+                  and disaster management across this varied landscape.
+                </p>
+                <p>
+                  In 2023, County Commissioner Elena Reyes identified a
+                  troubling pattern in emergency response metrics. Despite
+                  significant investments in new equipment and hiring additional
+                  personnel, response times showed minimal improvement overall
+                  and remained inconsistent across different parts of the
+                  county. More concerningly, response time variability had
+                  actually increased—meaning that while the average response
+                  time remained relatively stable at 11.3 minutes, the standard
+                  deviation had grown from 4.2 minutes to 6.8 minutes over the
+                  past two years.
+                </p>
+                <p>
+                  This inconsistency created political challenges as residents
+                  in areas with higher variability complained about unreliable
+                  emergency services despite the county's increased spending.
+                  The county council demanded a comprehensive solution before
+                  approving additional emergency services funding.
+                </p>
+                <img
+                  src="assets/images/government/satellite-map.png"
+                  alt="Map of Westridge County showing diverse geographical regions"
+                  class="case-img"
+                />
+              </div>
+
+              <div class="stats-container">
+                <div class="stat-card">
+                  <div class="stat-number">450,000</div>
+                  <div class="stat-label">County Population</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-number">1,200</div>
+                  <div class="stat-label">Square Miles</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-number">11.3</div>
+                  <div class="stat-label">Average Response Time (min)</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-number">6.8</div>
+                  <div class="stat-label">Response Time Std Dev (min)</div>
+                </div>
+              </div>
+
+              <div class="case-section">
+                <h2 class="case-section-title">The Challenge</h2>
+                <p>
+                  Chief of Emergency Operations Marcus Chen assembled a task
+                  force to examine the issue. After comprehensive data analysis,
+                  they identified several critical factors influencing response
+                  times:
+                </p>
+                <ol>
+                  <li>
+                    <strong>Geographic factors</strong>: Distance from stations,
+                    road quality, and terrain
+                  </li>
+                  <li>
+                    <strong>Temporal factors</strong>: Time of day, day of week,
+                    and seasonal patterns
+                  </li>
+                  <li>
+                    <strong>Resource factors</strong>: Staff availability,
+                    equipment readiness, and concurrent emergencies
+                  </li>
+                  <li>
+                    <strong>Call factors</strong>: Type of emergency, location
+                    accuracy, and special requirements
+                  </li>
+                </ol>
+                <p>
+                  The traditional approach to emergency response optimization
+                  focused primarily on minimizing average response times by
+                  strategically locating stations and resources. However, this
+                  approach failed to address the increasing variance in response
+                  times, which was creating both safety risks and public
+                  relations problems.
+                </p>
+                <p>
+                  The task force needed to develop a more sophisticated approach
+                  that could:
+                </p>
+                <ul>
+                  <li>Reduce overall response times</li>
+                  <li>Decrease response time variability</li>
+                  <li>
+                    Optimize resource allocation within budget constraints
+                  </li>
+                  <li>Adapt to changing conditions and patterns</li>
+                </ul>
+              </div>
+
+              <div class="case-section">
+                <h2 class="case-section-title">
+                  The Bayesian Optimization Approach
+                </h2>
+                <p>
+                  Dr. Sarah Jackson, a data scientist who had recently joined
+                  the county's analytics team, recognized that the emergency
+                  response system exhibited characteristics of a stochastic
+                  process with input-dependent uncertainty. In other words, both
+                  the expected response time and the variability of response
+                  times depended on the same underlying factors.
+                </p>
+                <div class="case-quote">
+                  "What makes emergency response so challenging to optimize is
+                  that the variability itself changes based on our resource
+                  allocation decisions. It's not just about improving the
+                  average—it's about ensuring reliability across all scenarios."
+                  <cite>— Dr. Sarah Jackson, Data Scientist</cite>
+                </div>
+                <p>
+                  Dr. Jackson proposed modeling the emergency response system
+                  using a Bayesian approach, where:
+                </p>
+                <p>f(x) ~ N(μ(x₁, x₂), σ²(x₁, x₂))</p>
+                <p>Where:</p>
+                <ul>
+                  <li>
+                    x₁ represented the resource allocation factor (percentage of
+                    resources allocated to different regions)
+                  </li>
+                  <li>
+                    x₂ represented the dispatching protocol factor (threshold
+                    values for different response protocols)
+                  </li>
+                  <li>μ(x₁, x₂) represented the expected response time</li>
+                  <li>σ²(x₁, x₂) represented the variance in response times</li>
+                </ul>
+                <p>
+                  Based on historical data from over 50,000 emergency calls,
+                  they determined that these functions could be approximated as:
+                </p>
+                <p>
+                  μ(x₁, x₂) = x₁² - 2x₁x₂ + cos(x₂)<br />
+                  σ²(x₁, x₂) = cos(x₁² + x₂²)
+                </p>
+                <p>
+                  This mathematical model captured the complex relationship
+                  between resource allocation, dispatching protocols, expected
+                  response times, and response time variability.
+                </p>
+              </div>
+
+              <div class="map-container">
+                <h3 class="map-title">
+                  Response Time Heat Map Before Optimization
+                </h3>
+                <div
+                  id="heatmap-before"
+                  style="width: 100%; height: 500px"
+                ></div>
+                <p class="chart-caption">
+                  Areas in red represent regions with both high average response
+                  times and high variability.
+                </p>
+              </div>
+
+              <div class="case-section">
+                <h2 class="case-section-title">
+                  Implementation and Visualization
+                </h2>
+                <p>
+                  To help the emergency management team understand and apply
+                  this model, Dr. Jackson's team developed an interactive
+                  visualization dashboard. This tool allowed officials to:
+                </p>
+                <ol>
+                  <li>
+                    Explore how different resource allocation strategies
+                    affected both average response times and their consistency
+                  </li>
+                  <li>
+                    Visualize geographical "heat maps" of expected performance
+                    across the county
+                  </li>
+                  <li>
+                    Simulate performance under various conditions (weather
+                    events, time of day, etc.)
+                  </li>
+                  <li>
+                    Generate optimized resource allocation plans for different
+                    scenarios
+                  </li>
+                </ol>
+                <p>The visualization revealed several critical insights:</p>
+                <ol>
+                  <li>
+                    <strong
+                      >High Centralization/Low Protocol Flexibility (x₁ high, x₂
+                      low)</strong
+                    >: This configuration led to good average response times but
+                    extremely high variability—creating "response deserts" in
+                    outlying areas.
+                  </li>
+                  <li>
+                    <strong
+                      >Low Centralization/High Protocol Flexibility (x₁ low, x₂
+                      high)</strong
+                    >: This configuration produced more consistent response
+                    times across the county but at the cost of slower average
+                    response times overall.
+                  </li>
+                  <li>
+                    <strong>Balanced Approach with Dynamic Adjustment</strong>:
+                    A middle-ground approach with time-dependent adjustments
+                    offered the best overall performance, minimizing both
+                    average response time and variance.
+                  </li>
+                </ol>
+              </div>
+
+              <div class="implementation-steps">
+                <h3 style="margin-bottom: 1.5rem">Implementation Timeline</h3>
+
+                <div class="step">
+                  <div class="step-number">1</div>
+                  <div class="step-content">
+                    <h4 class="step-title">
+                      Data Collection and Model Development (Months 1-2)
+                    </h4>
+                    <p>
+                      Gathered historical response data, developed initial
+                      mathematical model, and created prototype visualization
+                      tools.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="step">
+                  <div class="step-number">2</div>
+                  <div class="step-content">
+                    <h4 class="step-title">
+                      Validation and Refinement (Months 3-4)
+                    </h4>
+                    <p>
+                      Tested model predictions against historical scenarios,
+                      refined model parameters based on validation results, and
+                      developed integration framework with existing dispatch
+                      systems.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="step">
+                  <div class="step-number">3</div>
+                  <div class="step-content">
+                    <h4 class="step-title">
+                      Training and Limited Deployment (Months 5-6)
+                    </h4>
+                    <p>
+                      Trained dispatch supervisors and key personnel, deployed
+                      system in advisory mode (suggestions only), and gathered
+                      feedback for adjustments.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="step">
+                  <div class="step-number">4</div>
+                  <div class="step-content">
+                    <h4 class="step-title">Full Implementation (Months 7-8)</h4>
+                    <p>
+                      Transitioned to full automated recommendations,
+                      implemented real-time feedback loops, and established
+                      ongoing monitoring and evaluation framework.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="case-section">
+                <h2 class="case-section-title">Implementation Challenges</h2>
+                <p>
+                  Implementing this new approach presented several operational
+                  challenges:
+                </p>
+                <ol>
+                  <li>
+                    <strong>Legacy Systems Integration</strong>: Connecting the
+                    Bayesian model with existing dispatch and tracking systems,
+                    many of which used outdated technology.
+                  </li>
+                  <li>
+                    <strong>Staff Training</strong>: Training dispatchers and
+                    first responders on the new protocols and helping them
+                    understand the probabilistic nature of the system.
+                  </li>
+                  <li>
+                    <strong>Political Considerations</strong>: Balancing the
+                    demands of different communities and explaining why
+                    resources might be allocated differently based on the
+                    optimization model.
+                  </li>
+                  <li>
+                    <strong>Real-time Adaptation</strong>: Developing mechanisms
+                    to update the model parameters as conditions changed and new
+                    data became available.
+                  </li>
+                  <li>
+                    <strong>Budget Constraints</strong>: Implementing the system
+                    with limited IT resources and without disrupting ongoing
+                    emergency services.
+                  </li>
+                </ol>
+                <div class="case-quote">
+                  "The biggest hurdle wasn't technical—it was getting everyone,
+                  from dispatchers to county commissioners, to understand that
+                  sometimes what feels intuitively right isn't statistically
+                  optimal. We needed to build trust in the system."
+                  <cite>— Marcus Chen, Chief of Emergency Operations</cite>
+                </div>
+              </div>
+
+              <div class="case-section">
+                <h2 class="case-section-title">Results and Impact</h2>
+                <p>
+                  After a phased rollout over eight months, the results exceeded
+                  expectations:
+                </p>
+                <ul>
+                  <li>
+                    <strong>Improved Average Response Times</strong>:
+                    County-wide average response time decreased from 11.3
+                    minutes to 9.7 minutes (14% improvement).
+                  </li>
+                  <li>
+                    <strong>Dramatically Reduced Variability</strong>: The
+                    standard deviation in response times decreased from 6.8
+                    minutes to 3.2 minutes (53% improvement).
+                  </li>
+                  <li>
+                    <strong>More Equitable Service</strong>: The disparity in
+                    response times between the best-served and worst-served
+                    areas decreased by 61%.
+                  </li>
+                  <li>
+                    <strong>Enhanced Resource Utilization</strong>: First
+                    responder idle time decreased by 17%, while the percentage
+                    of calls handled by the nearest appropriate unit increased
+                    from 73% to 89%.
+                  </li>
+                  <li>
+                    <strong>Cost Savings</strong>: The improved efficiency
+                    allowed the county to meet its response time goals without
+                    adding the five additional ambulances that had been
+                    previously planned, saving approximately $1.7 million
+                    annually.
+                  </li>
+                </ul>
+                <p>
+                  The most dramatic improvements were seen during challenging
+                  conditions such as snowstorms, when the dynamic allocation
+                  system automatically adjusted resources based on predicted
+                  call patterns and road conditions.
+                </p>
+              </div>
+
+              <div class="map-container">
+                <h3 class="map-title">
+                  Response Time Heat Map After Optimization
+                </h3>
+                <div
+                  id="heatmap-after"
+                  style="width: 100%; height: 500px"
+                ></div>
+                <p class="chart-caption">
+                  The optimized system significantly reduced both average
+                  response times and their variability, particularly in
+                  previously underserved areas.
+                </p>
+              </div>
+
+              <div class="key-points">
+                <div class="key-point">
+                  <h4 class="key-point-title">Beyond Averages</h4>
+                  <p>
+                    Traditional optimization that focuses solely on averages can
+                    mask critical variability issues that affect service quality
+                    and public perception.
+                  </p>
+                </div>
+                <div class="key-point">
+                  <h4 class="key-point-title">
+                    Modeling Uncertainty Explicitly
+                  </h4>
+                  <p>
+                    By treating uncertainty as a function of the same variables
+                    that affect expected outcomes, organizations can make more
+                    robust operational decisions.
+                  </p>
+                </div>
+                <div class="key-point">
+                  <h4 class="key-point-title">Equity and Efficiency</h4>
+                  <p>
+                    The Bayesian approach allowed for explicit trade-offs
+                    between service consistency (equity) and overall efficiency,
+                    making these trade-offs transparent to decision-makers.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="tab-content"
+            data-tab-content="interactive-tool"
+          >
+            <h3 style="margin-bottom: 1rem">
+              Westridge County Emergency Response Optimization Tool
+            </h3>
+            <p>
+              This interactive tool models the emergency response system in
+              Westridge County. It allows you to explore how different resource
+              allocation strategies (x₁) and dispatching protocols (x₂) affect
+              both average response times and their variability.
+            </p>
+
+            <div class="tool-container">
+              <div class="tool-header">
+                <div class="tool-title">
+                  Emergency Response Optimization Model
+                </div>
+                <div class="tool-actions">
+                  <button
+                    class="action-btn"
+                    id="reset-btn"
+                  >
+                    Reset
+                  </button>
+                  <button
+                    class="action-btn"
+                    id="optimal-btn"
+                  >
+                    Find Optimal
+                  </button>
+                </div>
+              </div>
+
+              <iframe
+                src="tools/bayesian-model-visualization.html"
+                class="tool-frame"
+                id="visualization-frame"
+              ></iframe>
+            </div>
+
+            <div class="case-quote">
+              "This visualization was a game-changer for our discussions with
+              the county council. Suddenly, they could see how our decisions
+              affected not just average response times, but also the reliability
+              of our service across different communities."
+              <cite>— Elena Reyes, County Commissioner</cite>
+            </div>
+
+            <p>
+              In the tool above, the left heatmap shows expected response times
+              across different parameter settings, while the right heatmap shows
+              the variability of those times. The ideal solution balances both
+              considerations, providing reasonable response times with high
+              consistency across all county regions.
+            </p>
+
+            <p>
+              Notice the regions where the variance function (right plot) shows
+              low values (blue areas). These represent parameter combinations
+              where response times are most consistent—a critical factor for
+              ensuring equitable emergency services across the diverse county.
+            </p>
+          </div>
+
+          <div
+            class="tab-content"
+            data-tab-content="discussion-questions"
+          >
+            <h3>Discussion Questions</h3>
+
+            <div class="case-questions">
+              <ol>
+                <li>
+                  How might other public services (water management, public
+                  transportation, etc.) benefit from similar approaches to
+                  operational excellence?
+                </li>
+                <li>
+                  What ethical considerations arise when using algorithmic
+                  methods to allocate emergency services? How can governments
+                  ensure fairness while also optimizing efficiency?
+                </li>
+                <li>
+                  How could the Bayesian optimization model be extended to
+                  incorporate additional factors such as demographic
+                  information, health outcomes, or long-term regional
+                  development plans?
+                </li>
+                <li>
+                  What organizational changes might be necessary for a public
+                  agency to successfully implement and maintain sophisticated
+                  statistical approaches to service delivery?
+                </li>
+                <li>
+                  How should performance metrics for emergency services be
+                  designed to properly balance response speed, consistency,
+                  cost-effectiveness, and health outcomes?
+                </li>
+              </ol>
+            </div>
+
+            <h3 style="margin-top: 2rem">Group Assignment</h3>
+            <p>
+              Working in groups of 3-4, develop a comprehensive analysis of
+              Westridge County's approach to emergency services optimization.
+              Your analysis should include:
+            </p>
+
+            <ol>
+              <li>
+                A critical evaluation of the Bayesian optimization model used by
+                Westridge County, including its strengths and limitations
+              </li>
+              <li>
+                An exploration of how political and social factors interact with
+                technical optimization in a public service context
+              </li>
+              <li>
+                A detailed implementation plan that addresses both technical
+                systems integration and organizational change management
+              </li>
+              <li>
+                A framework for evaluating success that goes beyond simple time
+                metrics to include equity, health outcomes, and public
+                satisfaction
+              </li>
+              <li>
+                Recommendations for extending this approach to other public
+                services within the county government
+              </li>
+            </ol>
+
+            <p>
+              Your deliverable should include a 10-15 page written report and a
+              15-minute presentation. Be prepared to demonstrate your
+              understanding of the interactive visualization tool as part of
+              your presentation.
+            </p>
+          </div>
+
+          <div
+            class="tab-content"
+            data-tab-content="resources"
+          >
+            <h3>Additional Resources</h3>
+
+            <h4 style="margin-top: 1.5rem">Readings</h4>
+            <ul>
+              <li>
+                Jackson, S., & Chen, M. (2024). "Equity-Aware Optimization in
+                Public Service Delivery."
+                <em>Journal of Public Administration Research and Theory</em>,
+                34(2), 312-335.
+              </li>
+              <li>
+                Reyes, E., & Peterson, J. (2023). "Beyond Response Times: A
+                Holistic Framework for Emergency Services Evaluation."
+                <em>Journal of Emergency Management</em>, 21(3), 147-163.
+              </li>
+              <li>
+                Swersky, K., Snoek, J., & Adams, R. P. (2013). "Multi-Task
+                Bayesian Optimization."
+                <em>Advances in Neural Information Processing Systems</em>, 26,
+                2004-2012.
+              </li>
+              <li>
+                Li, C., Rudin, C., & McCormick, T. H. (2019). "Towards
+                Transparent and Fair Machine Learning for Public Services."
+                <em>Nature Machine Intelligence</em>, 1(9), 425-431.
+              </li>
+            </ul>
+
+            <h4 style="margin-top: 1.5rem">Videos</h4>
+            <ul>
+              <li>
+                "Public Service Optimization: The Westridge County Case Study" -
+                Presentation by Dr. Sarah Jackson (35 min)
+              </li>
+              <li>
+                "Equity and Efficiency in Emergency Response Systems" - Panel
+                discussion with County Commissioner Elena Reyes (63 min)
+              </li>
+              <li>
+                "From Data to Decisions: Implementing Analytics in Local
+                Government" - Training video for public administrators (47 min)
+              </li>
+            </ul>
+
+            <h4 style="margin-top: 1.5rem">Tools & Templates</h4>
+            <ul>
+              <li>Emergency Response Evaluation Framework</li>
+              <li>Resource Allocation Modeling Template</li>
+              <li>Public Service Bayesian Optimization Implementation Guide</li>
+              <li>
+                Stakeholder Communication Plan for Data-Driven Initiatives
+              </li>
+            </ul>
+
+            <h4 style="margin-top: 1.5rem">Related Cases</h4>
+            <ul>
+              <li>
+                <a href="manufacturing-case.html"
+                  >PrecisionTech Manufacturing: Navigating Uncertainty in
+                  Production</a
+                >
+              </li>
+              <li>
+                <a href="finance-case.html"
+                  >Apex Investment Partners: Portfolio Optimization Under
+                  Uncertainty</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="container">
+        <div class="footer-content">
+          <div class="footer-col">
+            <h3>About</h3>
+            <p>
+              This educational course brings together state-of-the-art
+              statistical methods with practical operational excellence
+              frameworks, helping organizations manage complexity and
+              randomness.
+            </p>
+          </div>
+
+          <div class="footer-col">
+            <h3>Quick Links</h3>
+            <ul class="footer-links">
+              <li class="footer-link"><a href="index.html">Home</a></li>
+              <li class="footer-link">
+                <a href="manufacturing-case.html">Manufacturing Case</a>
+              </li>
+              <li class="footer-link">
+                <a href="finance-case.html">Finance Case</a>
+              </li>
+              <li class="footer-link">
+                <a href="government-case.html">Government Case</a>
+              </li>
+              <li class="footer-link">
+                <a href="gaussian-processes.html">Gaussian Processes</a>
+              </li>
+              <li class="footer-link">
+                <a href="instructor-resources.html">Instructor Resources</a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h3>Resources</h3>
+            <ul class="footer-links">
+              <li class="footer-link"><a href="#">Lecture Slides</a></li>
+              <li class="footer-link"><a href="#">Assignment Templates</a></li>
+              <li class="footer-link"><a href="#">Grading Rubrics</a></li>
+              <li class="footer-link"><a href="#">Discussion Guides</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="copyright">
+          <p>&copy; 2025 Operational Excellence Course. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Mobile menu toggle
+      const mobileMenuBtn = document.querySelector(".mobile-menu-btn");
+      const navLinks = document.querySelector(".nav-links");
+
+      mobileMenuBtn.addEventListener("click", () => {
+        navLinks.classList.toggle("show");
+      });
+
+      // Active link highlighting
+      const currentPage = window.location.pathname.split("/").pop();
+      const navLinkElements = document.querySelectorAll(".nav-link");
+
+      navLinkElements.forEach((link) => {
+        const linkPage = link.getAttribute("href");
+        if (linkPage === currentPage) {
+          link.classList.add("active");
+        } else if (currentPage === "" && linkPage === "index.html") {
+          link.classList.add("active");
+        } else {
+          link.classList.remove("active");
+        }
+      });
+
+      // Tab functionality
+      const tabs = document.querySelectorAll(".tab");
+      const tabContents = document.querySelectorAll(".tab-content");
+
+      if (tabs.length > 0 && tabContents.length > 0) {
+        tabs.forEach((tab) => {
+          tab.addEventListener("click", () => {
+            tabs.forEach((t) => t.classList.remove("active"));
+            tabContents.forEach((tc) => tc.classList.remove("active"));
+
+            tab.classList.add("active");
+            const activeTab = tab.getAttribute("data-tab");
+            document
+              .querySelector(`[data-tab-content="${activeTab}"]`)
+              .classList.add("active");
+          });
+        });
+      }
+
+      // Tool frame interactions
+      const resetBtn = document.getElementById("reset-btn");
+      const optimalBtn = document.getElementById("optimal-btn");
+      const visualizationFrame = document.getElementById("visualization-frame");
+
+      if (resetBtn && optimalBtn && visualizationFrame) {
+        resetBtn.addEventListener("click", () => {
+          visualizationFrame.contentWindow.postMessage(
+            { action: "reset" },
+            "*"
+          );
+        });
+
+        optimalBtn.addEventListener("click", () => {
+          visualizationFrame.contentWindow.postMessage(
+            { action: "findOptimal" },
+            "*"
+          );
+        });
+      }
+
+      // Listen for resize messages from iframe
+      window.addEventListener("message", function (event) {
+        if (event.data && event.data.type === "resize-iframe") {
+          const iframe = document.getElementById("visualization-frame");
+          iframe.style.height = `${event.data.height}px`;
+        }
+      });
+    </script>
+    <script>
+      // Load the heatmap in an iframe
+      document.addEventListener("DOMContentLoaded", function () {
+        const iframe = document.createElement("iframe");
+        iframe.src = "tools/response-time-heatmap-before.html";
+        iframe.style.width = "100%";
+        iframe.style.height = "500px";
+        iframe.style.border = "none";
+        iframe.style.overflow = "hidden";
+
+        const container = document.getElementById("heatmap-before");
+        container.appendChild(iframe);
+      });
+    </script>
+    <script>
+      // Load the "after" heatmap in an iframe
+      document.addEventListener("DOMContentLoaded", function () {
+        const iframe = document.createElement("iframe");
+        iframe.src = "tools/response-time-heatmap-after.html";
+        iframe.style.width = "100%";
+        iframe.style.height = "500px";
+        iframe.style.border = "none";
+        iframe.style.overflow = "hidden";
+
+        const container = document.getElementById("heatmap-after");
+        container.appendChild(iframe);
+      });
+    </script>
+  </body>
+</html>

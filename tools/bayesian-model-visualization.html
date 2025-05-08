@@ -197,16 +197,17 @@
       }
 
       .loading {
-        position: absolute;
+        position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
         background-color: rgba(255, 255, 255, 0.8);
         display: flex;
+        flex-direction: column;
         justify-content: center;
         align-items: center;
-        z-index: 10;
+        z-index: 1000;
       }
 
       .loading-spinner {
@@ -696,11 +697,10 @@
       const pointX1Value = document.getElementById("point-x1-value");
       const pointX2Value = document.getElementById("point-x2-value");
 
-      // Point info
-      const pointInfo = document.getElementById("point-info");
-      const pointMean = document.getElementById("point-mean");
-      const pointVariance = document.getElementById("point-variance");
-      const pointStd = document.getElementById("point-std");
+      // Point info - Changed from const to let to allow reassignment
+      let pointMean = document.getElementById("point-mean");
+      let pointVariance = document.getElementById("point-variance");
+      let pointStd = document.getElementById("point-std");
 
       // Canvas elements
       const meanCanvas = document.getElementById("mean-canvas");
@@ -986,25 +986,19 @@
         const variance = varianceFunction(pointX1, pointX2);
         const stdDev = Math.sqrt(Math.abs(variance)); // Absolute value to handle negative variance
 
-        // Update the values
-        pointMean.textContent = mean.toFixed(3);
-        pointVariance.textContent = variance.toFixed(3);
-        pointStd.textContent = stdDev.toFixed(3);
-
-        // THIS LINE IS MISSING - add it to update the coordinate display:
         document.getElementById(
           "point-info"
         ).innerHTML = `At x<sub>1</sub> = ${pointX1.toFixed(
           2
         )}, x<sub>2</sub> = ${pointX2.toFixed(2)}:<br>
-    Mean = <span id="point-mean">${mean.toFixed(3)}</span><br>
-    Variance = <span id="point-variance">${variance.toFixed(
-      3
-    )}</span> (Standard Deviation = <span id="point-std">${stdDev.toFixed(
+        Mean = <span id="point-mean">${mean.toFixed(3)}</span><br>
+        Variance = <span id="point-variance">${variance.toFixed(
+          3
+        )}</span> (Standard Deviation = <span id="point-std">${stdDev.toFixed(
           3
         )}</span>)`;
 
-        // After modifying the HTML, we need to update the element references
+        // Update references after the HTML has been changed
         pointMean = document.getElementById("point-mean");
         pointVariance = document.getElementById("point-variance");
         pointStd = document.getElementById("point-std");
@@ -1514,80 +1508,40 @@
       // Start the application
       initialize();
 
-      // Listen for messages from the parent page
-      window.addEventListener("message", function (event) {
-        // Make sure the message is from a trusted source
-        // In production, you'd want to check event.origin
-
-        if (event.data && event.data.action) {
-          switch (event.data.action) {
-            case "reset":
-              // Reset all sliders to default values
-              x1MinSlider.value = "-3";
-              x1MaxSlider.value = "3";
-              x2MinSlider.value = "-3";
-              x2MaxSlider.value = "3";
-              resolutionSlider.value = "40";
-              samplesSlider.value = "5";
-              pointX1Slider.value = "1";
-              pointX2Slider.value = "1";
-
-              // Update internal state variables
-              x1Range = { min: -3, max: 3 };
-              x2Range = { min: -3, max: 3 };
-              resolution = 40;
-              numSamples = 5;
-              pointX1 = 1;
-              pointX2 = 1;
-
-              // Update display values
-              x1MinValue.textContent = x1Range.min;
-              x1MaxValue.textContent = x1Range.max;
-              x2MinValue.textContent = x2Range.min;
-              x2MaxValue.textContent = x2Range.max;
-              resolutionValue.textContent = resolution;
-              samplesValue.textContent = numSamples;
-              pointX1Value.textContent = pointX1;
-              pointX2Value.textContent = pointX2;
-
-              // Recalculate and redraw
-              calculateValues();
-              drawPlots();
-              drawProbabilityPlot();
-              break;
-
-            case "findOptimal":
-              // Find the point with lowest variance and good mean
-              // This is just an example - you'd want to implement actual optimization logic
-              pointX1 = 0.5;
-              pointX2 = 0.5;
-              pointX1Slider.value = pointX1;
-              pointX2Slider.value = pointX2;
-              pointX1Value.textContent = pointX1;
-              pointX2Value.textContent = pointX2;
-              updatePointInfo();
-              drawPlots();
-              drawProbabilityPlot();
-              break;
+      // Add CSS for loading spinner
+      const spinnerStyle = document.createElement("style");
+      spinnerStyle.textContent = `
+        .loading {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background-color: rgba(255, 255, 255, 0.8);
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          z-index: 1000;
+        }
+        
+        .loading-spinner {
+          width: 40px;
+          height: 40px;
+          border: 5px solid rgba(59, 130, 246, 0.3);
+          border-radius: 50%;
+          border-top-color: #3b82f6;
+          animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+          to {
+            transform: rotate(360deg);
           }
         }
-      });
+      `;
+      document.head.appendChild(spinnerStyle);
 
-      // Send height information to parent
-      function updateParentAboutHeight() {
-        const height = document.body.scrollHeight;
-        window.parent.postMessage(
-          {
-            type: "resize-iframe",
-            height: height,
-          },
-          "*"
-        );
-      }
-
-      // Update on load and whenever content changes
-      window.addEventListener("load", updateParentAboutHeight);
-      window.addEventListener("resize", updateParentAboutHeight);
       // Listen for messages from the parent page
       window.addEventListener("message", function (event) {
         // Make sure the message is from a trusted source
@@ -1647,10 +1601,10 @@
 
                 // Define grid search parameters
                 const searchResolution = 20;
-                const searchMinX1 = -2;
-                const searchMaxX1 = 2;
-                const searchMinX2 = -2;
-                const searchMaxX2 = 2;
+                const searchMinX1 = Math.max(-2, x1Range.min);
+                const searchMaxX1 = Math.min(2, x1Range.max);
+                const searchMinX2 = Math.max(-2, x2Range.min);
+                const searchMaxX2 = Math.min(2, x2Range.max);
 
                 let bestPoint = { x1: 0, x2: 0, score: -Infinity };
 
@@ -1720,12 +1674,10 @@
                 notification.style.zIndex = "1000";
                 notification.style.transition = "opacity 0.5s ease";
                 notification.innerHTML = `
-            <strong>Optimal point found!</strong><br>
-            x₁ = ${bestPoint.x1.toFixed(2)}, x₂ = ${bestPoint.x2.toFixed(2)}<br>
-            Mean = ${bestPoint.mean.toFixed(
-              2
-            )}, Variance = ${bestPoint.variance.toFixed(2)}
-          `;
+                  <strong>Optimal point found!</strong><br>
+                  x₁ = ${bestPoint.x1.toFixed(2)}, x₂ = ${bestPoint.x2.toFixed(2)}<br>
+                  Mean = ${bestPoint.mean.toFixed(2)}, Variance = ${bestPoint.variance.toFixed(2)}
+                `;
                 document.body.appendChild(notification);
 
                 // Remove notification after a few seconds
@@ -1736,47 +1688,26 @@
                   }, 500);
                 }, 5000);
               }, 100);
-
               break;
           }
         }
       });
 
-      // Add CSS for loading spinner if it doesn't exist
-      if (!document.querySelector("style").textContent.includes(".loading")) {
-        const style = document.createElement("style");
-        style.textContent = `
-    .loading {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(255, 255, 255, 0.8);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-    }
-    
-    .loading-spinner {
-      width: 40px;
-      height: 40px;
-      border: 5px solid rgba(59, 130, 246, 0.3);
-      border-radius: 50%;
-      border-top-color: #3b82f6;
-      animation: spin 1s ease-in-out infinite;
-    }
-    
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
+      // Send height information to parent
+      function updateParentAboutHeight() {
+        const height = document.body.scrollHeight;
+        window.parent.postMessage(
+          {
+            type: "resize-iframe",
+            height: height,
+          },
+          "*"
+        );
       }
-    }
-  `;
-        document.head.appendChild(style);
-      }
+
+      // Update on load and whenever content changes
+      window.addEventListener("load", updateParentAboutHeight);
+      window.addEventListener("resize", updateParentAboutHeight);
     </script>
   </body>
 </html>
